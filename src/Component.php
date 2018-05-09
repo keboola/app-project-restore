@@ -26,6 +26,11 @@ class Component extends BaseComponent
 
         try {
             $s3UriParts = (new S3UriParser())->parse($params['backupUri']);
+
+            if (empty($s3UriParts['region'])) {
+                throw new \InvalidArgumentException(sprintf('Missing region info in uri: %s', $params['backupUri']));
+            }
+
         } catch (\InvalidArgumentException $e) {
             throw new UserException(sprintf('Parameter "backupUri" is not valid: %s', $e->getMessage()));
         }

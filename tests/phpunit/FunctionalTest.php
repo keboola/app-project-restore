@@ -172,6 +172,32 @@ class FunctionalTest extends TestCase
         $this->assertContains('Delete all existing component configurations', $runProcess->getOutput());
     }
 
+    public function testMissingRegionUriRun(): void
+    {
+        $fileSystem = new Filesystem();
+        $fileSystem->dumpFile(
+            $this->temp->getTmpFolder() . '/config.json',
+            \json_encode([
+                'parameters' => array_merge(
+                    [
+                        'backupUri' => sprintf(
+                            'https://%s.s3.amazonaws.com',
+                            getenv('TEST_AWS_S3_BUCKET')
+                        )
+                    ],
+                    $this->generateFederationTokenForParams()
+                ),
+            ])
+        );
+
+        $runCommand = "KBC_DATADIR={$this->temp->getTmpFolder()} php /code/src/run.php";
+        $runProcess = new Process($runCommand);
+        $runProcess->run();
+
+        $this->assertEquals(1, $runProcess->getExitCode());
+        $this->assertContains(' Missing region info', $runProcess->getOutput());
+    }
+
     private function cleanupKbcProject()
     {
         $components = new Components($this->sapiClient);
