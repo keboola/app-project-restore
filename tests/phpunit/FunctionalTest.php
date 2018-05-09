@@ -19,17 +19,17 @@ class FunctionalTest extends TestCase
     /**
      * @var Temp
      */
-    private $temp;
-
-    /**
-     * @var S3Client
-     */
-    private $s3Client;
+    protected $temp;
 
     /**
      * @var StorageApi
      */
-    private $sapiClient;
+    protected $sapiClient;
+
+    /**
+     * @var S3Client
+     */
+    protected $s3Client;
 
     public function setUp(): void
     {
@@ -80,7 +80,7 @@ class FunctionalTest extends TestCase
         $federationToken = $sts->getFederationToken([
             'DurationSeconds' => 3600,
             'Name' => 'GetProjectRestoreFile',
-            'Policy' => json_encode($policy)
+            'Policy' => json_encode($policy),
         ]);
 
         return [
@@ -102,7 +102,7 @@ class FunctionalTest extends TestCase
                             'https://%s.s3.%s.amazonaws.com',
                             getenv('TEST_AWS_S3_BUCKET'),
                             getenv('TEST_AWS_REGION')
-                        )
+                        ),
                     ],
                     $this->generateFederationTokenForParams()
                 ),
@@ -133,7 +133,7 @@ class FunctionalTest extends TestCase
                             'https://%s.s3.%s.amazonaws.com',
                             getenv('TEST_AWS_S3_BUCKET'),
                             getenv('TEST_AWS_REGION')
-                        )
+                        ),
                     ],
                     $this->generateFederationTokenForParams()
                 ),
@@ -183,7 +183,7 @@ class FunctionalTest extends TestCase
                         'backupUri' => sprintf(
                             'https://%s.s3.amazonaws.com',
                             getenv('TEST_AWS_S3_BUCKET')
-                        )
+                        ),
                     ],
                     $this->generateFederationTokenForParams()
                 ),
@@ -198,7 +198,7 @@ class FunctionalTest extends TestCase
         $this->assertContains(' Missing region info', $runProcess->getOutput());
     }
 
-    private function cleanupKbcProject()
+    private function cleanupKbcProject(): void
     {
         $components = new Components($this->sapiClient);
         foreach ($components->listComponents() as $component) {
