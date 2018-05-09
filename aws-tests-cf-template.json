@@ -1,0 +1,101 @@
+{
+  "AWSTemplateFormatVersion": "2010-09-09",
+  "Description": "Keboola Connection - S3 bucket and user for Project Restore Tests",
+  "Resources": {
+    "S3FilesBucket": {
+      "Type": "AWS::S3::Bucket",
+      "Properties": {
+        "BucketEncryption": {
+          "ServerSideEncryptionConfiguration": [
+            {
+              "ServerSideEncryptionByDefault": {
+                "SSEAlgorithm": "AES256"
+              }
+            }
+          ]
+        }
+      }
+    },
+    "User": {
+      "Type": "AWS::IAM::User",
+      "Properties": {
+        "Path": "/",
+        "Policies": [
+          {
+            "PolicyName": "S3Access",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "s3:ListBucket",
+                    "s3:GetObject",
+                    "s3:PutObject"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": [
+                    {
+                      "Fn::Join": [
+                        "", [ "arn:aws:s3:::", {
+                          "Ref": "S3FilesBucket"
+                        } , "/*" ]
+                      ]
+                    },
+                    {
+                      "Fn::Join": [
+                        "", [ "arn:aws:s3:::", {
+                          "Ref": "S3FilesBucket"
+                        } ]
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          {
+            "PolicyName": "STSFederationToken",
+            "PolicyDocument": {
+              "Version": "2012-10-17",
+              "Statement": [
+                {
+                  "Action": [
+                    "sts:GetFederationToken"
+                  ],
+                  "Effect": "Allow",
+                  "Resource": [
+                    {
+                      "Fn::Join": [
+                        "", [ "arn:aws:sts::", {
+                          "Ref": "AWS::AccountId"
+                        } , ":federated-user/GetProjectRestoreFile" ]
+                      ]
+                    }
+                  ]
+                }
+              ]
+            }
+          }
+        ]
+      }
+    }
+  },
+  "Outputs": {
+    "region": {
+      "Value": {
+        "Ref": "AWS::Region"
+      }
+    },
+    "filesBucket": {
+      "Value": {
+        "Ref": "S3FilesBucket"
+      }
+    },
+    "user": {
+      "Value": {
+        "Ref": "User"
+      }
+    }
+
+  }
+}
