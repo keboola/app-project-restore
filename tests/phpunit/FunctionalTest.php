@@ -54,6 +54,133 @@ class FunctionalTest extends TestCase
         ]);
     }
 
+    public function testSuccessfulRun(): void
+    {
+        $fileSystem = new Filesystem();
+        $fileSystem->dumpFile(
+            $this->temp->getTmpFolder() . '/config.json',
+            \json_encode([
+                'parameters' => array_merge(
+                    [
+                        'backupUri' => sprintf(
+                            'https://%s.s3.%s.amazonaws.com',
+                            getenv('TEST_AWS_S3_BUCKET'),
+                            getenv('TEST_AWS_REGION')
+                        ),
+                    ],
+                    $this->generateFederationTokenForParams()
+                ),
+            ])
+        );
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $this->assertEmpty($runProcess->getErrorOutput());
+
+        $output = $runProcess->getOutput();
+        $this->assertContains('Restoring bucket c-bucket', $output);
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertContains('Restoring table in.c-bucket.Account', $output);
+    }
+
+    public function testNotEmptyProjectErrorRun(): void
+    {
+        $fileSystem = new Filesystem();
+        $fileSystem->dumpFile(
+            $this->temp->getTmpFolder() . '/config.json',
+            \json_encode([
+                'parameters' => array_merge(
+                    [
+                        'backupUri' => sprintf(
+                            'https://%s.s3.%s.amazonaws.com',
+                            getenv('TEST_AWS_S3_BUCKET'),
+                            getenv('TEST_AWS_REGION')
+                        ),
+                    ],
+                    $this->generateFederationTokenForParams()
+                ),
+            ])
+        );
+
+        // existing bucket
+        $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->run();
+
+        $errorOutput = $runProcess->getOutput();
+        $this->assertEquals(1, $runProcess->getExitCode());
+        $this->assertContains('Storage is not empty', $errorOutput);
+        $this->assertContains($bucketId, $errorOutput);
+
+        $this->sapiClient->dropBucket($bucketId, ["force" => true]);
+
+        // existing configurations
+        $components = new Components($this->sapiClient);
+
+        $configuration = new Configuration();
+        $configuration->setComponentId('keboola.csv-import')
+            ->setConfigurationId('old')
+            ->setName('Old configuration');
+
+        $components->addConfiguration($configuration);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->run();
+
+        $this->assertEquals(1, $runProcess->getExitCode());
+        $this->assertContains('Delete all existing component configurations', $runProcess->getOutput());
+    }
+
+    public function testMissingRegionUriRun(): void
+    {
+        $fileSystem = new Filesystem();
+        $fileSystem->dumpFile(
+            $this->temp->getTmpFolder() . '/config.json',
+            \json_encode([
+                'parameters' => array_merge(
+                    [
+                        'backupUri' => sprintf(
+                            'https://%s.s3.amazonaws.com',
+                            getenv('TEST_AWS_S3_BUCKET')
+                        ),
+                    ],
+                    $this->generateFederationTokenForParams()
+                ),
+            ])
+        );
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->run();
+
+        $this->assertEquals(1, $runProcess->getExitCode());
+        $this->assertContains(' Missing region info', $runProcess->getOutput());
+    }
+
+    private function cleanupKbcProject(): void
+    {
+        $components = new Components($this->sapiClient);
+        foreach ($components->listComponents() as $component) {
+            foreach ($component['configurations'] as $configuration) {
+                $components->deleteConfiguration($component['id'], $configuration['id']);
+
+                // delete configuration from trash
+                $components->deleteConfiguration($component['id'], $configuration['id']);
+            }
+        }
+
+        // drop linked buckets
+        foreach ($this->sapiClient->listBuckets() as $bucket) {
+            if (isset($bucket['sourceBucket'])) {
+                $this->sapiClient->dropBucket($bucket["id"], ["force" => true]);
+            }
+        }
+
+        foreach ($this->sapiClient->listBuckets() as $bucket) {
+            $this->sapiClient->dropBucket($bucket["id"], ["force" => true]);
+        }
+    }
 
     private function generateFederationTokenForParams(): array
     {
@@ -90,135 +217,13 @@ class FunctionalTest extends TestCase
         ];
     }
 
-    public function testSuccessfulRun(): void
+    private function createTestProcess(): Process
     {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
-
-        $runCommand = "KBC_DATADIR={$this->temp->getTmpFolder()} php /code/src/run.php";
-        $runProcess = new  Process($runCommand);
-        $runProcess->mustRun();
-
-        $this->assertEmpty($runProcess->getErrorOutput());
-
-        $output = $runProcess->getOutput();
-        $this->assertContains('Restoring bucket c-bucket', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
-        $this->assertContains('Restoring table in.c-bucket.Account', $output);
-    }
-
-    public function testNotEmptyProjectErrorRun(): void
-    {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
-
-        $runCommand = "KBC_DATADIR={$this->temp->getTmpFolder()} php /code/src/run.php";
-
-        // existing bucket
-        $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
-
-        $runProcess = new Process($runCommand);
-        $runProcess->run();
-
-        $errorOutput = $runProcess->getOutput();
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Storage is not empty', $errorOutput);
-        $this->assertContains($bucketId, $errorOutput);
-
-        $this->sapiClient->dropBucket($bucketId, ["force" => true]);
-
-        // existing configurations
-        $components = new Components($this->sapiClient);
-
-        $configuration = new Configuration();
-        $configuration->setComponentId('keboola.csv-import')
-            ->setConfigurationId('old')
-            ->setName('Old configuration');
-
-        $components->addConfiguration($configuration);
-
-        $runProcess = new Process($runCommand);
-        $runProcess->run();
-
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Delete all existing component configurations', $runProcess->getOutput());
-    }
-
-    public function testMissingRegionUriRun(): void
-    {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
-
-        $runCommand = "KBC_DATADIR={$this->temp->getTmpFolder()} php /code/src/run.php";
-        $runProcess = new Process($runCommand);
-        $runProcess->run();
-
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains(' Missing region info', $runProcess->getOutput());
-    }
-
-    private function cleanupKbcProject(): void
-    {
-        $components = new Components($this->sapiClient);
-        foreach ($components->listComponents() as $component) {
-            foreach ($component['configurations'] as $configuration) {
-                $components->deleteConfiguration($component['id'], $configuration['id']);
-
-                // delete configuration from trash
-                $components->deleteConfiguration($component['id'], $configuration['id']);
-            }
-        }
-
-        // drop linked buckets
-        foreach ($this->sapiClient->listBuckets() as $bucket) {
-            if (isset($bucket['sourceBucket'])) {
-                $this->sapiClient->dropBucket($bucket["id"], ["force" => true]);
-            }
-        }
-
-        foreach ($this->sapiClient->listBuckets() as $bucket) {
-            $this->sapiClient->dropBucket($bucket["id"], ["force" => true]);
-        }
+        $runCommand = "php /code/src/run.php";
+        return new  Process($runCommand, null, [
+            'KBC_DATADIR' => $this->temp->getTmpFolder(),
+            'KBC_URL' => getenv('TEST_STORAGE_API_URL'),
+            'KBC_TOKEN' => getenv('TEST_STORAGE_API_TOKEN'),
+        ]);
     }
 }
