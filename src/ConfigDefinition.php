@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace MyComponent;
+namespace Keboola\App\ProjectRestore;
 
 use Keboola\Component\Config\BaseConfigDefinition;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
@@ -16,12 +16,22 @@ class ConfigDefinition extends BaseConfigDefinition
         /** @noinspection NullPointerExceptionInspection */
         $parametersNode
             ->children()
-                ->scalarNode('foo')
-                    ->defaultValue('baz')
+                ->scalarNode('backupUri')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('accessKeyId')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('#secretAccessKey')
+                    ->isRequired()
+                ->end()
+                ->scalarNode('#sessionToken')
+                    ->isRequired()
                 ->end()
             ->end()
         ;
         // @formatter:on
         return $parametersNode;
     }
+
 }

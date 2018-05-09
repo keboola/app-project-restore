@@ -1,7 +1,8 @@
 {
     "require": {
         "PHP": "^7.1",
-        "keboola/php-component": "^3.0"
+        "keboola/php-component": "^3.0",
+        "keboola/kbc-project-restore": "dev-master"
     },
     "require-dev": {
         "jakub-onderka/php-parallel-lint": "^1.0",
@@ -14,12 +15,12 @@
     },
     "autoload": {
         "psr-4": {
-            "MyComponent\\": "src/"
+            "Keboola\\App\\ProjectRestore\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "MyComponent\\Tests\\": "tests/phpunit/"
+            "Keboola\\App\\ProjectRestore\\Tests\\": "tests/phpunit/"
         }
     },
     "scripts": {

@@ -2,8 +2,8 @@
 
 declare(strict_types=1);
 
+use Keboola\App\ProjectRestore\Component;
 use Keboola\Component\UserException;
-use MyComponent\Component;
 
 require __DIR__ . '/../vendor/autoload.php';
 
