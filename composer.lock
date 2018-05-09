@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "990909581c712207d91891655acbe97f",
+    "content-hash": "7ab8a2486df6874d5eb9546bf4bcab61",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -300,25 +300,28 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "dev-master",
+            "version": "0.0.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "b200aa79392b10a93a67ce393f204f045d6e02cb"
+                "reference": "d72e3c42aa99586138269ab06aa4fb85683acbeb"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/b200aa79392b10a93a67ce393f204f045d6e02cb",
-                "reference": "b200aa79392b10a93a67ce393f204f045d6e02cb",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/d72e3c42aa99586138269ab06aa4fb85683acbeb",
+                "reference": "d72e3c42aa99586138269ab06aa4fb85683acbeb",
                 "shasum": ""
             },
             "require": {
                 "keboola/php-temp": "^1.0.0",
                 "keboola/storage-api-client": "^10.1.1",
-                "monolog/monolog": "^1.23"
+                "monolog/monolog": "^1.23",
+                "php": "^7.1"
             },
             "require-dev": {
+                "jakub-onderka/php-parallel-lint": "^1.0",
                 "keboola/coding-standard": "^2.0",
+                "phpstan/phpstan-shim": "^0.9.2",
                 "phpunit/phpunit": "^5.0"
             },
             "type": "library",
@@ -328,13 +331,16 @@
                 }
             },
             "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
             "authors": [
                 {
                     "name": "Erik Zigo",
                     "email": "erik.zigo@keboola.com"
                 }
             ],
-            "time": "2018-05-08T14:13:34+00:00"
+            "time": "2018-05-09T17:41:37+00:00"
         },
         {
             "name": "keboola/php-component",
@@ -2662,9 +2668,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/kbc-project-restore": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
