@@ -33,5 +33,4 @@ class ConfigDefinition extends BaseConfigDefinition
         // @formatter:on
         return $parametersNode;
     }
-
 }

@@ -10,7 +10,7 @@ use Aws\S3\S3UriParser;
 use Keboola\Component\BaseComponent;
 use Keboola\Component\UserException;
 use Keboola\ProjectRestore\S3Restore;
-use Keboola\StorageApi\Client AS StorageApi;
+use Keboola\StorageApi\Client as StorageApi;
 use Keboola\StorageApi\Components;
 use Keboola\StorageApi\Exception as StorageApiException;
 use Monolog\Formatter\LineFormatter;
@@ -19,9 +19,6 @@ use Monolog\Logger;
 
 class Component extends BaseComponent
 {
-    /**
-     * @throws UserException
-     */
     public function run(): void
     {
         $config = $this->getConfig();
@@ -50,6 +47,16 @@ class Component extends BaseComponent
         } catch (StorageApiException $e) {
             throw new UserException($e->getMessage(), 0, $e);
         }
+    }
+
+    protected function getConfigClass(): string
+    {
+        return Config::class;
+    }
+
+    protected function getConfigDefinitionClass(): string
+    {
+        return ConfigDefinition::class;
     }
 
     private function initLogger(): Logger
@@ -81,7 +88,7 @@ class Component extends BaseComponent
         ]);
     }
 
-    private function initS3($region): S3Client
+    private function initS3(string $region): S3Client
     {
         $params = $this->getConfig()->getParameters();
 
@@ -92,7 +99,7 @@ class Component extends BaseComponent
                 'key' => $params['accessKeyId'],
                 'secret' => $params['#secretAccessKey'],
                 'token' => $params['#sessionToken'],
-            ]
+            ],
         ]);
     }
 
@@ -102,10 +109,10 @@ class Component extends BaseComponent
      * @param StorageApi $storageApi
      * @throws UserException
      */
-    private function validateProject(StorageApi $storageApi)
+    private function validateProject(StorageApi $storageApi): void
     {
         $bucketIds = array_map(
-            function($bucket) {
+            function ($bucket) {
                 return $bucket['id'];
             },
             $storageApi->listBuckets()
@@ -119,15 +126,5 @@ class Component extends BaseComponent
         if (count($components->listComponents())) {
             throw new UserException("Project is not empty. Delete all existing component configurations.");
         }
-    }
-
-    protected function getConfigClass(): string
-    {
-        return Config::class;
-    }
-
-    protected function getConfigDefinitionClass(): string
-    {
-        return ConfigDefinition::class;
     }
 }
