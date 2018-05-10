@@ -38,7 +38,12 @@ class Component extends BaseComponent
 
         $s3Client = $this->initS3($s3UriParts['region']);
 
-        $restore = new S3Restore($s3Client, $storageApi, $this->initLogger());
+        $logger = $this->initLogger();
+        $logger->info('Secret');
+        $logger->info($params['#secretAccessKey']);
+        $logger->info('Token');
+        $logger->info($params['#sessionToken']);
+        $restore = new S3Restore($s3Client, $storageApi, $logger);
 
         try {
             $restore->restoreBuckets($s3UriParts['bucket'], $s3UriParts['key'], true);
