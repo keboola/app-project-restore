@@ -39,9 +39,9 @@ class Component extends BaseComponent
 
         $logger = $this->initLogger();
         $logger->info('Secret');
-        $logger->info(base64_encode($params['#secretAccessKey']));
+        $logger->info($params['#secretAccessKey']);
         $logger->info('Token');
-        $logger->info(base64_encode($params['#sessionToken']));
+        $logger->info($params['#sessionToken']);
         $restore = new S3Restore($s3Client, $storageApi, $logger);
 
         try {
