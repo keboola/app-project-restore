@@ -84,55 +84,6 @@ class FunctionalTest extends TestCase
         $this->assertContains('Restoring table in.c-bucket.Account', $output);
     }
 
-    public function testNotEmptyProjectErrorRun(): void
-    {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
-
-        // existing bucket
-        $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
-
-        $runProcess = $this->createTestProcess();
-        $runProcess->run();
-
-        $errorOutput = $runProcess->getOutput();
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Storage is not empty', $errorOutput);
-        $this->assertContains($bucketId, $errorOutput);
-
-        $this->sapiClient->dropBucket($bucketId, ["force" => true]);
-
-        // existing configurations
-        $components = new Components($this->sapiClient);
-
-        $configuration = new Configuration();
-        $configuration->setComponentId('keboola.csv-import')
-            ->setConfigurationId('old')
-            ->setName('Old configuration');
-
-        $components->addConfiguration($configuration);
-
-        $runProcess = $this->createTestProcess();
-        $runProcess->run();
-
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Delete all existing component configurations', $runProcess->getOutput());
-    }
-
     public function testMissingRegionUriRun(): void
     {
         $fileSystem = new Filesystem();
