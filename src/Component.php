@@ -34,7 +34,6 @@ class Component extends BaseComponent
         }
 
         $storageApi = $this->initSapi();
-        $this->validateProject($storageApi);
 
         $s3Client = $this->initS3($s3UriParts['region']);
 
@@ -109,30 +108,5 @@ class Component extends BaseComponent
                 'token' => $params['#sessionToken'],
             ],
         ]);
-    }
-
-    /**
-     * Check if project is empty without buckets and configurations
-     *
-     * @param StorageApi $storageApi
-     * @throws UserException
-     */
-    private function validateProject(StorageApi $storageApi): void
-    {
-        $bucketIds = array_map(
-            function ($bucket) {
-                return $bucket['id'];
-            },
-            $storageApi->listBuckets()
-        );
-
-        if (count($bucketIds) > 0) {
-            throw new UserException(sprintf('Storage is not empty. Existing buckets: %s', join(', ', $bucketIds)));
-        }
-
-        $components = new Components($storageApi);
-        if (count($components->listComponents())) {
-            throw new UserException("Project is not empty. Delete all existing component configurations.");
-        }
     }
 }
