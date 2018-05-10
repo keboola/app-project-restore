@@ -142,7 +142,7 @@ class FunctionalTest extends TestCase
                 'parameters' => array_merge(
                     [
                         'backupUri' => sprintf(
-                            'https://%s.s3.amazonaws.com',
+                            'https://%s.i-dont-know.com',
                             getenv('TEST_AWS_S3_BUCKET')
                         ),
                     ],
