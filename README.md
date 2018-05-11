@@ -1,6 +1,6 @@
-# my-component
+# KBC Project Region Migration - Restore from AWS S3
 
-[![Build Status](https://travis-ci.org/keboola/my-component.svg?branch=master)](https://travis-ci.org/keboola/my-component)
+[![Build Status](https://travis-ci.org/keboola/app-project-restore.svg?branch=master)](https://travis-ci.org/keboola/app-project-restore)
 
 > Fill in description
 
