@@ -41,7 +41,7 @@ class Component extends BaseComponent
         $restore = new S3Restore($s3Client, $storageApi, $this->initLogger());
 
         try {
-            $restore->restoreBuckets($s3UriParts['bucket'], $s3UriParts['key'], true);
+            $restore->restoreBuckets($s3UriParts['bucket'], $s3UriParts['key'], !$params['useDefaultBackend']);
             $restore->restoreConfigs($s3UriParts['bucket'], $s3UriParts['key']);
             $restore->restoreTables($s3UriParts['bucket'], $s3UriParts['key']);
             $restore->restoreTableAliases($s3UriParts['bucket'], $s3UriParts['key']);
