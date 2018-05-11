@@ -84,6 +84,47 @@ class FunctionalTest extends TestCase
         $this->assertContains('Restoring table in.c-bucket.Account', $output);
     }
 
+    public function testIgnoreSelfValidationRun(): void
+    {
+        $fileSystem = new Filesystem();
+        $fileSystem->dumpFile(
+            $this->temp->getTmpFolder() . '/config.json',
+            \json_encode([
+                'parameters' => array_merge(
+                    [
+                        'backupUri' => sprintf(
+                            'https://%s.s3.%s.amazonaws.com',
+                            getenv('TEST_AWS_S3_BUCKET'),
+                            getenv('TEST_AWS_REGION')
+                        ),
+                    ],
+                    $this->generateFederationTokenForParams()
+                ),
+            ])
+        );
+
+        $components = new Components($this->sapiClient);
+
+        $configuration = new Configuration();
+        $configuration->setComponentId(getenv('TEST_COMPONENT_ID'))
+            ->setConfigurationId('self')
+            ->setName('Self configuration')
+            ->setConfiguration(json_decode(file_get_contents($this->temp->getTmpFolder() . '/config.json')));
+
+        $components->addConfiguration($configuration);
+
+        $runProcess = $this->createTestProcess('self');
+        $runProcess->mustRun();
+
+        $this->assertEmpty($runProcess->getErrorOutput());
+
+        $output = $runProcess->getOutput();
+        $this->assertNotContains('Project is not empty. Delete all existing component configurations.', $output);
+        $this->assertContains('Restoring bucket c-bucket', $output);
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertContains('Restoring table in.c-bucket.Account', $output);
+    }
+
     public function testNotEmptyProjectErrorRun(): void
     {
         $fileSystem = new Filesystem();
@@ -217,13 +258,15 @@ class FunctionalTest extends TestCase
         ];
     }
 
-    private function createTestProcess(): Process
+    private function createTestProcess(?string $configId = null): Process
     {
         $runCommand = "php /code/src/run.php";
         return new  Process($runCommand, null, [
             'KBC_DATADIR' => $this->temp->getTmpFolder(),
             'KBC_URL' => getenv('TEST_STORAGE_API_URL'),
             'KBC_TOKEN' => getenv('TEST_STORAGE_API_TOKEN'),
+            'KBC_COMPONENTID' => getenv('TEST_COMPONENT_ID'),
+            'KBC_CONFIGID' => $configId,
         ]);
     }
 }
