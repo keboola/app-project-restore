@@ -43,6 +43,7 @@ class ConfigDefinitionTest extends TestCase
                         'accessKeyId' => 'test-user',
                         '#secretAccessKey' => 'secret',
                         '#sessionToken' => 'token',
+                        'useDefaultBackend' => false,
                     ],
                 ],
             ],
@@ -63,6 +64,7 @@ class ConfigDefinitionTest extends TestCase
                         '#secretAccessKey' => 'secret',
                         '#sessionToken' => 'token',
                         'other' => 'something',
+                        'useDefaultBackend' => false,
                     ],
                 ],
             ],
@@ -126,6 +128,18 @@ class ConfigDefinitionTest extends TestCase
                 ],
                 InvalidConfigurationException::class,
                 'The child node "#sessionToken" at path "root.parameters" must be configured.',
+            ],
+            'bad value for default backend' => [
+                [
+                    'parameters' => [
+                        'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                        'accessKeyId' => 'test-user',
+                        '#secretAccessKey' => 'secret',
+                        'useDefaultBackend' => 'fake',
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'Invalid type for path "root.parameters.useDefaultBackend". Expected boolean, but got string.',
             ],
         ];
     }
