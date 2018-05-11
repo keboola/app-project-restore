@@ -126,6 +126,23 @@ class Component extends BaseComponent
         }
 
         $components = new Components($storageApi);
+        $componentsConfigurations = $components->listComponents();
+        if (!count($componentsConfigurations)) {
+            return;
+        }
+
+        // ignore self configuration
+        if (count($componentsConfigurations) === 1) {
+            $component = $componentsConfigurations[0];
+            if ($component['id'] === getenv('KBC_COMPONENTID') && count($component['configurations']) === 1) {
+                $configuration = $component['configurations'][0];
+
+                if ($configuration['id'] === getenv('KBC_CONFIGID')) {
+                    return;
+                }
+            }
+        }
+
         if (count($components->listComponents())) {
             throw new UserException("Project is not empty. Delete all existing component configurations.");
         }
