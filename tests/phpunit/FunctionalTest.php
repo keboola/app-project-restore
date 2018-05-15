@@ -31,6 +31,11 @@ class FunctionalTest extends TestCase
      */
     protected $s3Client;
 
+    /**
+     * @var string
+     */
+    private $testRunId;
+
     public function setUp(): void
     {
         parent::setUp();
@@ -52,10 +57,15 @@ class FunctionalTest extends TestCase
             'version' => 'latest',
             'region' => getenv('TEST_AWS_REGION'),
         ]);
+
+        $this->testRunId = $this->sapiClient->generateRunId();
     }
 
     public function testSuccessfulRun(): void
     {
+        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
+        self::assertCount(0, $events);
+
         $fileSystem = new Filesystem();
         $fileSystem->dumpFile(
             $this->temp->getTmpFolder() . '/config.json',
@@ -82,6 +92,9 @@ class FunctionalTest extends TestCase
         $this->assertContains('Restoring bucket c-bucket', $output);
         $this->assertContains('Restoring keboola.csv-import configurations', $output);
         $this->assertContains('Restoring table in.c-bucket.Account', $output);
+
+        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
+        self::assertGreaterThan(0, count($events));
     }
 
     public function testIgnoreSelfValidationRun(): void
@@ -267,6 +280,7 @@ class FunctionalTest extends TestCase
             'KBC_TOKEN' => getenv('TEST_STORAGE_API_TOKEN'),
             'KBC_COMPONENTID' => getenv('TEST_COMPONENT_ID'),
             'KBC_CONFIGID' => $configId,
+            'KBC_RUNID' => $this->testRunId,
         ]);
     }
 }
