@@ -1,0 +1,51 @@
+{
+  "type": "object",
+  "title": "Parameters",
+  "required": [
+    "backupUri",
+    "accessKeyId",
+    "#secretAccessKey",
+    "#sessionToken",
+    "useDefaultBackend"
+  ],
+  "properties": {
+    "backupUri": {
+      "type": "string",
+      "title": "Project backup URI in AWS S3",
+      "default": "",
+      "minLength": 1,
+      "propertyOrder": 1
+    },
+    "accessKeyId": {
+      "type": "string",
+      "title": "AWS Credentials: Access key ID",
+      "default": "",
+      "minLength": 1,
+      "propertyOrder": 2
+    },
+    "#secretAccessKey": {
+      "type": "string",
+      "title": "AWS Credentials: Secret access key",
+      "format": "password",
+      "default": "",
+      "minLength": 1,
+      "propertyOrder": 3
+    },
+    "#sessionToken": {
+      "type": "string",
+      "title": "AWS Credentials: Session token",
+      "format": "password",
+      "default": "",
+      "minLength": 1,
+      "propertyOrder": 4
+    },
+    "useDefaultBackend": {
+      "type": "boolean",
+      "title": "Use default storage backend",
+      "default": false,
+      "minLength": 1,
+      "description": "(Otherwise buckets will be created in same backend as in source project)",
+      "propertyOrder": 5
+    }
+  }
+}
