@@ -4,20 +4,20 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d77a1434aea908d45ad91489d088ba9c",
+    "content-hash": "6c4bcc4b56fdcbd18044fed20779408b",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.55.9",
+            "version": "3.56.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "ec7b972330ce65fa33875025ffec8e09e0476a8f"
+                "reference": "b4a2ac39a00eef77c1da5fa3807e7ec54982dddd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/ec7b972330ce65fa33875025ffec8e09e0476a8f",
-                "reference": "ec7b972330ce65fa33875025ffec8e09e0476a8f",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/b4a2ac39a00eef77c1da5fa3807e7ec54982dddd",
+                "reference": "b4a2ac39a00eef77c1da5fa3807e7ec54982dddd",
                 "shasum": ""
             },
             "require": {
@@ -84,7 +84,7 @@
                 "s3",
                 "sdk"
             ],
-            "time": "2018-05-08T16:37:41+00:00"
+            "time": "2018-05-16T18:29:09+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -300,16 +300,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "0.0.2",
+            "version": "0.0.4",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "ae85f8165eeabf437fcc96c57f38b6a57448d116"
+                "reference": "629df3a3d16b09224ef6c0eb8231bc4191e31a3a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/ae85f8165eeabf437fcc96c57f38b6a57448d116",
-                "reference": "ae85f8165eeabf437fcc96c57f38b6a57448d116",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/629df3a3d16b09224ef6c0eb8231bc4191e31a3a",
+                "reference": "629df3a3d16b09224ef6c0eb8231bc4191e31a3a",
                 "shasum": ""
             },
             "require": {
@@ -340,7 +340,7 @@
                     "email": "erik.zigo@keboola.com"
                 }
             ],
-            "time": "2018-05-15T10:18:25+00:00"
+            "time": "2018-05-17T13:57:19+00:00"
         },
         {
             "name": "keboola/php-component",
@@ -446,16 +446,16 @@
         },
         {
             "name": "keboola/storage-api-client",
-            "version": "10.1.1",
+            "version": "10.1.2",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/storage-api-php-client.git",
-                "reference": "079e1b1d9575dca9c0490a4ae456387603ca5b2e"
+                "reference": "8d658203a944623836a86b4247c5100c41365e4e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/storage-api-php-client/zipball/079e1b1d9575dca9c0490a4ae456387603ca5b2e",
-                "reference": "079e1b1d9575dca9c0490a4ae456387603ca5b2e",
+                "url": "https://api.github.com/repos/keboola/storage-api-php-client/zipball/8d658203a944623836a86b4247c5100c41365e4e",
+                "reference": "8d658203a944623836a86b4247c5100c41365e4e",
                 "shasum": ""
             },
             "require": {
@@ -469,6 +469,7 @@
                 "apigen/apigen": "4.0.0-RC4",
                 "ext-pdo_pgsql": "*",
                 "keboola/php-csv-db-import": "^2.2",
+                "phpstan/phpstan-shim": "^0.9.2",
                 "phpunit/phpunit": "^5.6",
                 "psr/log": "~1.0",
                 "squizlabs/php_codesniffer": "^2.7"
@@ -488,7 +489,7 @@
             ],
             "description": "Keboola Storage API PHP CLient",
             "homepage": "http://keboola.com",
-            "time": "2018-03-29T19:18:32+00:00"
+            "time": "2018-05-16T16:53:42+00:00"
         },
         {
             "name": "monolog/monolog",
