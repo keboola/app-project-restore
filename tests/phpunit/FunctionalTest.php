@@ -92,6 +92,10 @@ class FunctionalTest extends TestCase
         $this->assertContains('Restoring bucket c-bucket', $output);
         $this->assertContains('Restoring keboola.csv-import configurations', $output);
         $this->assertContains('Restoring table in.c-bucket.Account', $output);
+        $this->assertContains('Skipping orchestrator configurations', $output);
+        $this->assertContains('Skipping gooddata-writer configurations', $output);
+        $this->assertContains('You can transfer orchestrations with Orchestrator', $output);
+        $this->assertContains('You can transfer writers with GoodData', $output);
 
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
         self::assertGreaterThan(0, count($events));
