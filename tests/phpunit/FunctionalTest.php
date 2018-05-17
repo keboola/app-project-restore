@@ -86,16 +86,18 @@ class FunctionalTest extends TestCase
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
 
-        $this->assertEmpty($runProcess->getErrorOutput());
-
         $output = $runProcess->getOutput();
         $this->assertContains('Restoring bucket c-bucket', $output);
         $this->assertContains('Restoring keboola.csv-import configurations', $output);
         $this->assertContains('Restoring table in.c-bucket.Account', $output);
-        $this->assertContains('Skipping orchestrator configurations', $output);
-        $this->assertContains('Skipping gooddata-writer configurations', $output);
-        $this->assertContains('You can transfer orchestrations with Orchestrator', $output);
-        $this->assertContains('You can transfer writers with GoodData', $output);
+
+        $errorOutput = $runProcess->getErrorOutput();
+        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
+        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
+        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
+        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
+
+        $this->assertCount(4, explode(PHP_EOL, trim($errorOutput)));
 
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
         self::assertGreaterThan(0, count($events));
@@ -133,13 +135,19 @@ class FunctionalTest extends TestCase
         $runProcess = $this->createTestProcess('self');
         $runProcess->mustRun();
 
-        $this->assertEmpty($runProcess->getErrorOutput());
-
         $output = $runProcess->getOutput();
         $this->assertNotContains('Project is not empty. Delete all existing component configurations.', $output);
         $this->assertContains('Restoring bucket c-bucket', $output);
         $this->assertContains('Restoring keboola.csv-import configurations', $output);
         $this->assertContains('Restoring table in.c-bucket.Account', $output);
+
+        $errorOutput = $runProcess->getErrorOutput();
+        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
+        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
+        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
+        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
+
+        $this->assertCount(4, explode(PHP_EOL, trim($errorOutput)));
     }
 
     public function testNotEmptyProjectErrorRun(): void
