@@ -29,26 +29,42 @@ class Component extends BaseComponent
             if (empty($s3UriParts['region'])) {
                 throw new \InvalidArgumentException(sprintf('Missing region info in uri: %s', $params['backupUri']));
             }
+
+            $s3Bucket = $s3UriParts['bucket'];
+            $s3Region = $s3UriParts['region'];
+            $s3Path = $s3UriParts['key'];
         } catch (\InvalidArgumentException $e) {
             throw new UserException(sprintf('Parameter "backupUri" is not valid: %s', $e->getMessage()));
         }
 
         $storageApi = $this->initSapi();
+        $logger = $this->initLogger();
+
         $this->validateProject($storageApi);
 
-        $s3Client = $this->initS3($s3UriParts['region']);
+        $s3Client = $this->initS3($s3Region);
 
-        $restore = new S3Restore($s3Client, $storageApi, $this->initLogger());
+        $restore = new S3Restore($s3Client, $storageApi, $logger);
 
         try {
-            $restore->restoreBuckets($s3UriParts['bucket'], $s3UriParts['key'], !$params['useDefaultBackend']);
-            $restore->restoreConfigs($s3UriParts['bucket'], $s3UriParts['key']);
-            $restore->restoreTables($s3UriParts['bucket'], $s3UriParts['key']);
-            $restore->restoreTableAliases($s3UriParts['bucket'], $s3UriParts['key']);
+            $restore->restoreBuckets($s3Bucket, $s3Path, !$params['useDefaultBackend']);
+            $restore->restoreConfigs($s3Bucket, $s3Path);
+            $restore->restoreTables($s3Bucket, $s3Path);
+            $restore->restoreTableAliases($s3Bucket, $s3Path);
         } catch (S3Exception $e) {
             throw new UserException($e->getMessage(), 0, $e);
         } catch (StorageApiException $e) {
             throw new UserException($e->getMessage(), 0, $e);
+        }
+
+        // notify orchestrations
+        if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'orchestrator'))) {
+            $logger->warning('Orchestrations was not restored. You can transfer orchestrations with Orchestrator Migrate App');
+        }
+
+        // notify gooddata writers
+        if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'gooddata-writer'))) {
+            $logger->warning('GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App');
         }
     }
 
