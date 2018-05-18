@@ -61,6 +61,23 @@ class FunctionalTest extends TestCase
         $this->testRunId = $this->sapiClient->generateRunId();
     }
 
+    public function testRestoreTables(): void
+    {
+        $this->createConfigFile('tables');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertContains('Restoring bucket ', $output);
+        $this->assertContains('Restoring table ', $output);
+        $this->assertNotRegExp('/Restoring [^\s]+ configurations/', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
     public function testSuccessfulRun(): void
     {
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
