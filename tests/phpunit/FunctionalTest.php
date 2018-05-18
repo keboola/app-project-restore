@@ -66,22 +66,7 @@ class FunctionalTest extends TestCase
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
         self::assertCount(0, $events);
 
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
+        $this->createConfigFile('base');
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
@@ -105,23 +90,7 @@ class FunctionalTest extends TestCase
 
     public function testIgnoreSelfValidationRun(): void
     {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
-
+        $this->createConfigFile('base');
         $components = new Components($this->sapiClient);
 
         $configuration = new Configuration();
@@ -152,22 +121,7 @@ class FunctionalTest extends TestCase
 
     public function testNotEmptyProjectErrorRun(): void
     {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
+        $this->createConfigFile('base');
 
         // existing bucket
         $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
@@ -294,5 +248,30 @@ class FunctionalTest extends TestCase
             'KBC_CONFIGID' => $configId,
             'KBC_RUNID' => $this->testRunId,
         ]);
+    }
+
+    private function createConfigFile(string $testCase): \SplFileInfo
+    {
+        $configFile = new \SplFileInfo($this->temp->getTmpFolder() . '/config.json');
+
+        $fileSystem = new Filesystem();
+        $fileSystem->dumpFile(
+            $configFile->getPathname(),
+            \json_encode([
+                'parameters' => array_merge(
+                    [
+                        'backupUri' => sprintf(
+                            'https://%s.s3.%s.amazonaws.com/%s/',
+                            getenv('TEST_AWS_S3_BUCKET'),
+                            getenv('TEST_AWS_REGION'),
+                            $testCase
+                        ),
+                    ],
+                    $this->generateFederationTokenForParams()
+                ),
+            ])
+        );
+
+        return $configFile;
     }
 }
