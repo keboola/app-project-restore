@@ -310,14 +310,20 @@ class FunctionalTest extends TestCase
     private function createTestProcess(?string $configId = null): Process
     {
         $runCommand = "php /code/src/run.php";
-        return new  Process($runCommand, null, [
-            'KBC_DATADIR' => $this->temp->getTmpFolder(),
-            'KBC_URL' => getenv('TEST_STORAGE_API_URL'),
-            'KBC_TOKEN' => getenv('TEST_STORAGE_API_TOKEN'),
-            'KBC_COMPONENTID' => getenv('TEST_COMPONENT_ID'),
-            'KBC_CONFIGID' => $configId,
-            'KBC_RUNID' => $this->testRunId,
-        ]);
+        return new  Process(
+            $runCommand,
+            null,
+            [
+                'KBC_DATADIR' => $this->temp->getTmpFolder(),
+                'KBC_URL' => getenv('TEST_STORAGE_API_URL'),
+                'KBC_TOKEN' => getenv('TEST_STORAGE_API_TOKEN'),
+                'KBC_COMPONENTID' => getenv('TEST_COMPONENT_ID'),
+                'KBC_CONFIGID' => $configId,
+                'KBC_RUNID' => $this->testRunId,
+            ],
+            null,
+            120.0
+        );
     }
 
     private function createConfigFile(string $testCase): \SplFileInfo
