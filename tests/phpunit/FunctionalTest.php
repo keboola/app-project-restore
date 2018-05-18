@@ -61,6 +61,23 @@ class FunctionalTest extends TestCase
         $this->testRunId = $this->sapiClient->generateRunId();
     }
 
+    public function testRestoreConfigs(): void
+    {
+        $this->createConfigFile('configurations');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertNotRegExp('/Restoring bucket /', $output);
+        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
     public function testRestoreTables(): void
     {
         $this->createConfigFile('tables');
