@@ -61,66 +61,102 @@ class FunctionalTest extends TestCase
         $this->testRunId = $this->sapiClient->generateRunId();
     }
 
-    public function testSuccessfulRun(): void
+    public function testRestoreConfigs(): void
     {
-        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
-        self::assertCount(0, $events);
-
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
+        $this->createConfigFile('configurations');
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
 
         $output = $runProcess->getOutput();
-        $this->assertContains('Restoring bucket c-bucket', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
-        $this->assertContains('Restoring table in.c-bucket.Account', $output);
-
         $errorOutput = $runProcess->getErrorOutput();
-        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
-        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
-        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
-        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
 
-        $this->assertCount(4, explode(PHP_EOL, trim($errorOutput)));
+        $this->assertNotRegExp('/Restoring bucket /', $output);
+        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testRestoreTables(): void
+    {
+        $this->createConfigFile('tables');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertContains('Restoring bucket ', $output);
+        $this->assertContains('Restoring table ', $output);
+        $this->assertNotRegExp('/Restoring [^\s]+ configurations/', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testRunIdPropagation(): void
+    {
+        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
+        self::assertCount(0, $events);
+
+        $this->createConfigFile('tables');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $this->assertEmpty($runProcess->getErrorOutput());
 
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
         self::assertGreaterThan(0, count($events));
+
+        $this->assertCount(1, array_filter(
+            $events,
+            function (array $event) {
+                return $event['event'] === 'storage.tableCreated';
+            }
+        ));
     }
 
-    public function testIgnoreSelfValidationRun(): void
+    public function testRestoreObsoleteConfigs(): void
     {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
+        $this->createConfigFile('configurations-obsolete');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertNotRegExp('/Restoring bucket /', $output);
+        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
+        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
+    }
+
+    public function testRestoreConfigsAppNotify(): void
+    {
+        $this->createConfigFile('configurations-obsolete');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertNotRegExp('/Restoring bucket /', $output);
+        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
+        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
+    }
+
+    public function testIgnoreSelfConfig(): void
+    {
+        $this->createConfigFile('configurations');
 
         $components = new Components($this->sapiClient);
 
@@ -136,53 +172,36 @@ class FunctionalTest extends TestCase
         $runProcess->mustRun();
 
         $output = $runProcess->getOutput();
-        $this->assertNotContains('Project is not empty. Delete all existing component configurations.', $output);
-        $this->assertContains('Restoring bucket c-bucket', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
-        $this->assertContains('Restoring table in.c-bucket.Account', $output);
-
         $errorOutput = $runProcess->getErrorOutput();
-        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
-        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
-        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
-        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
 
-        $this->assertCount(4, explode(PHP_EOL, trim($errorOutput)));
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertEmpty($errorOutput);
     }
 
-    public function testNotEmptyProjectErrorRun(): void
+    public function testExistingBucketsUserError(): void
     {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
+        $this->createConfigFile('tables');
 
-        // existing bucket
         $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
 
         $runProcess = $this->createTestProcess();
         $runProcess->run();
 
-        $errorOutput = $runProcess->getOutput();
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Storage is not empty', $errorOutput);
-        $this->assertContains($bucketId, $errorOutput);
+        $this->assertContains('Storage is not empty', $output);
+        $this->assertContains($bucketId, $output);
 
-        $this->sapiClient->dropBucket($bucketId, ["force" => true]);
+        $this->assertEmpty($errorOutput);
+    }
 
-        // existing configurations
+    public function testExistingConfigsUserError(): void
+    {
+        $this->createConfigFile('tables');
+
         $components = new Components($this->sapiClient);
 
         $configuration = new Configuration();
@@ -195,8 +214,13 @@ class FunctionalTest extends TestCase
         $runProcess = $this->createTestProcess();
         $runProcess->run();
 
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Delete all existing component configurations', $runProcess->getOutput());
+        $this->assertContains('Delete all existing component configurations', $output);
+
+        $this->assertEmpty($errorOutput);
     }
 
     public function testMissingRegionUriRun(): void
@@ -286,13 +310,44 @@ class FunctionalTest extends TestCase
     private function createTestProcess(?string $configId = null): Process
     {
         $runCommand = "php /code/src/run.php";
-        return new  Process($runCommand, null, [
-            'KBC_DATADIR' => $this->temp->getTmpFolder(),
-            'KBC_URL' => getenv('TEST_STORAGE_API_URL'),
-            'KBC_TOKEN' => getenv('TEST_STORAGE_API_TOKEN'),
-            'KBC_COMPONENTID' => getenv('TEST_COMPONENT_ID'),
-            'KBC_CONFIGID' => $configId,
-            'KBC_RUNID' => $this->testRunId,
-        ]);
+        return new  Process(
+            $runCommand,
+            null,
+            [
+                'KBC_DATADIR' => $this->temp->getTmpFolder(),
+                'KBC_URL' => getenv('TEST_STORAGE_API_URL'),
+                'KBC_TOKEN' => getenv('TEST_STORAGE_API_TOKEN'),
+                'KBC_COMPONENTID' => getenv('TEST_COMPONENT_ID'),
+                'KBC_CONFIGID' => $configId,
+                'KBC_RUNID' => $this->testRunId,
+            ],
+            null,
+            120.0
+        );
+    }
+
+    private function createConfigFile(string $testCase): \SplFileInfo
+    {
+        $configFile = new \SplFileInfo($this->temp->getTmpFolder() . '/config.json');
+
+        $fileSystem = new Filesystem();
+        $fileSystem->dumpFile(
+            $configFile->getPathname(),
+            \json_encode([
+                'parameters' => array_merge(
+                    [
+                        'backupUri' => sprintf(
+                            'https://%s.s3.%s.amazonaws.com/%s/',
+                            getenv('TEST_AWS_S3_BUCKET'),
+                            getenv('TEST_AWS_REGION'),
+                            $testCase
+                        ),
+                    ],
+                    $this->generateFederationTokenForParams()
+                ),
+            ])
+        );
+
+        return $configFile;
     }
 }
