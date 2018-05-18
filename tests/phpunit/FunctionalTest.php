@@ -154,64 +154,6 @@ class FunctionalTest extends TestCase
         $this->assertContains('You can transfer writers with GoodData', $errorOutput);
     }
 
-    public function testSuccessfulRun(): void
-    {
-        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
-        self::assertCount(0, $events);
-
-        $this->createConfigFile('base');
-
-        $runProcess = $this->createTestProcess();
-        $runProcess->mustRun();
-
-        $output = $runProcess->getOutput();
-        $this->assertContains('Restoring bucket c-bucket', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
-        $this->assertContains('Restoring table in.c-bucket.Account', $output);
-
-        $errorOutput = $runProcess->getErrorOutput();
-        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
-        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
-        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
-        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
-
-        $this->assertCount(4, explode(PHP_EOL, trim($errorOutput)));
-
-        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
-        self::assertGreaterThan(0, count($events));
-    }
-
-    public function testIgnoreSelfValidationRun(): void
-    {
-        $this->createConfigFile('base');
-        $components = new Components($this->sapiClient);
-
-        $configuration = new Configuration();
-        $configuration->setComponentId(getenv('TEST_COMPONENT_ID'))
-            ->setConfigurationId('self')
-            ->setName('Self configuration')
-            ->setConfiguration(json_decode(file_get_contents($this->temp->getTmpFolder() . '/config.json')));
-
-        $components->addConfiguration($configuration);
-
-        $runProcess = $this->createTestProcess('self');
-        $runProcess->mustRun();
-
-        $output = $runProcess->getOutput();
-        $this->assertNotContains('Project is not empty. Delete all existing component configurations.', $output);
-        $this->assertContains('Restoring bucket c-bucket', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
-        $this->assertContains('Restoring table in.c-bucket.Account', $output);
-
-        $errorOutput = $runProcess->getErrorOutput();
-        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
-        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
-        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
-        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
-
-        $this->assertCount(4, explode(PHP_EOL, trim($errorOutput)));
-    }
-
     public function testIgnoreSelfConfig(): void
     {
         $this->createConfigFile('configurations');
@@ -279,40 +221,6 @@ class FunctionalTest extends TestCase
         $this->assertContains('Delete all existing component configurations', $output);
 
         $this->assertEmpty($errorOutput);
-    }
-
-    public function testNotEmptyProjectErrorRun(): void
-    {
-        $this->createConfigFile('base');
-
-        // existing bucket
-        $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
-
-        $runProcess = $this->createTestProcess();
-        $runProcess->run();
-
-        $errorOutput = $runProcess->getOutput();
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Storage is not empty', $errorOutput);
-        $this->assertContains($bucketId, $errorOutput);
-
-        $this->sapiClient->dropBucket($bucketId, ["force" => true]);
-
-        // existing configurations
-        $components = new Components($this->sapiClient);
-
-        $configuration = new Configuration();
-        $configuration->setComponentId('keboola.csv-import')
-            ->setConfigurationId('old')
-            ->setName('Old configuration');
-
-        $components->addConfiguration($configuration);
-
-        $runProcess = $this->createTestProcess();
-        $runProcess->run();
-
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Delete all existing component configurations', $runProcess->getOutput());
     }
 
     public function testMissingRegionUriRun(): void
