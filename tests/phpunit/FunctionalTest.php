@@ -212,6 +212,75 @@ class FunctionalTest extends TestCase
         $this->assertCount(4, explode(PHP_EOL, trim($errorOutput)));
     }
 
+    public function testIgnoreSelfConfig(): void
+    {
+        $this->createConfigFile('configurations');
+
+        $components = new Components($this->sapiClient);
+
+        $configuration = new Configuration();
+        $configuration->setComponentId(getenv('TEST_COMPONENT_ID'))
+            ->setConfigurationId('self')
+            ->setName('Self configuration')
+            ->setConfiguration(json_decode(file_get_contents($this->temp->getTmpFolder() . '/config.json')));
+
+        $components->addConfiguration($configuration);
+
+        $runProcess = $this->createTestProcess('self');
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testExistingBucketsUserError(): void
+    {
+        $this->createConfigFile('tables');
+
+        $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->run();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertEquals(1, $runProcess->getExitCode());
+        $this->assertContains('Storage is not empty', $output);
+        $this->assertContains($bucketId, $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testExistingConfigsUserError(): void
+    {
+        $this->createConfigFile('tables');
+
+        $components = new Components($this->sapiClient);
+
+        $configuration = new Configuration();
+        $configuration->setComponentId('keboola.csv-import')
+            ->setConfigurationId('old')
+            ->setName('Old configuration');
+
+        $components->addConfiguration($configuration);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->run();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertEquals(1, $runProcess->getExitCode());
+        $this->assertContains('Delete all existing component configurations', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
     public function testNotEmptyProjectErrorRun(): void
     {
         $this->createConfigFile('base');
