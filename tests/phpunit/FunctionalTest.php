@@ -95,6 +95,29 @@ class FunctionalTest extends TestCase
         $this->assertEmpty($errorOutput);
     }
 
+    public function testRunIdPropagation(): void
+    {
+        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
+        self::assertCount(0, $events);
+
+        $this->createConfigFile('tables');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $this->assertEmpty($runProcess->getErrorOutput());
+
+        $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
+        self::assertGreaterThan(0, count($events));
+
+        $this->assertCount(1, array_filter(
+            $events,
+            function (array $event) {
+                return $event['event'] === 'storage.tableCreated';
+            }
+        ));
+    }
+
     public function testSuccessfulRun(): void
     {
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
