@@ -118,6 +118,24 @@ class FunctionalTest extends TestCase
         ));
     }
 
+    public function testRestoreObsoleteConfigs(): void
+    {
+        $this->createConfigFile('configurations-obsolete');
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertNotRegExp('/Restoring bucket /', $output);
+        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
+        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
+    }
+
     public function testSuccessfulRun(): void
     {
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
