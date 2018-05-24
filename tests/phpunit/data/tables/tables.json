@@ -35,6 +35,7 @@
     "columns": [
       "Id",
       "Name"
-    ]
+    ],
+    "metadata": []
   }
 ]
