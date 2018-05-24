@@ -18,6 +18,12 @@ use Monolog\Logger;
 
 class Component extends BaseComponent
 {
+    public const COMPONENTS_WITH_CUSTOM_RESTORE = [
+      'orchestrator',
+      'gooddata-writer',
+      'keboola.wr-db-snowflake',
+    ];
+
     public function run(): void
     {
         $config = $this->getConfig();
@@ -48,7 +54,7 @@ class Component extends BaseComponent
 
         try {
             $restore->restoreBuckets($s3Bucket, $s3Path, !$params['useDefaultBackend']);
-            $restore->restoreConfigs($s3Bucket, $s3Path);
+            $restore->restoreConfigs($s3Bucket, $s3Path, self::COMPONENTS_WITH_CUSTOM_RESTORE);
             $restore->restoreTables($s3Bucket, $s3Path);
             $restore->restoreTableAliases($s3Bucket, $s3Path);
         } catch (S3Exception $e) {
