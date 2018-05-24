@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "fec0f5644486218f5dc11bb80744b0e9",
+    "content-hash": "fa1bddeb275c220b1f38a6b0de6ff34c",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -300,16 +300,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "dev-martin-skip-components",
+            "version": "1.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "32dce5b22f0ef09e41601d0f2a97f220c8bda0a2"
+                "reference": "5bb604f615cc47e7bc549bcdd0ec87d4a5751d96"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/32dce5b22f0ef09e41601d0f2a97f220c8bda0a2",
-                "reference": "32dce5b22f0ef09e41601d0f2a97f220c8bda0a2",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/5bb604f615cc47e7bc549bcdd0ec87d4a5751d96",
+                "reference": "5bb604f615cc47e7bc549bcdd0ec87d4a5751d96",
                 "shasum": ""
             },
             "require": {
@@ -340,7 +340,7 @@
                     "email": "erik.zigo@keboola.com"
                 }
             ],
-            "time": "2018-05-24T07:13:00+00:00"
+            "time": "2018-05-24T08:00:52+00:00"
         },
         {
             "name": "keboola/php-component",
@@ -2669,9 +2669,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/kbc-project-restore": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
