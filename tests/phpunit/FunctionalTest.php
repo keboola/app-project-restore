@@ -120,7 +120,7 @@ class FunctionalTest extends TestCase
 
     public function testRestoreObsoleteConfigs(): void
     {
-        $this->createConfigFile('configurations-obsolete');
+        $this->createConfigFile('configurations-skip');
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
@@ -138,7 +138,7 @@ class FunctionalTest extends TestCase
 
     public function testRestoreConfigsAppNotify(): void
     {
-        $this->createConfigFile('configurations-obsolete');
+        $this->createConfigFile('configurations-skip');
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
