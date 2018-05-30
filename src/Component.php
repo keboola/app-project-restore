@@ -68,6 +68,11 @@ class Component extends BaseComponent
         if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'gooddata-writer'))) {
             $this->getLogger()->warning('GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App');
         }
+
+        // notify snowflake writers
+        if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'keboola.wr-db-snowflake'))) {
+            $this->getLogger()->warning('Snowflake writers was not restored. You can transfer writers with Snowflake Writer Migrate App');
+        }
     }
 
     protected function getConfigClass(): string
