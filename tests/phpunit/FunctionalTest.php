@@ -134,6 +134,7 @@ class FunctionalTest extends TestCase
 
         $this->assertContains('Skipping orchestrator configurations', $errorOutput);
         $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
+        $this->assertContains('Skipping keboola.wr-db-snowflake configurations', $errorOutput);
     }
 
     public function testRestoreConfigsAppNotify(): void
@@ -152,6 +153,7 @@ class FunctionalTest extends TestCase
 
         $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
         $this->assertContains('You can transfer writers with GoodData', $errorOutput);
+        $this->assertContains('You can transfer writers with Snowflake', $errorOutput);
     }
 
     public function testIgnoreSelfConfig(): void
