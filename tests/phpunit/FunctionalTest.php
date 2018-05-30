@@ -192,10 +192,10 @@ class FunctionalTest extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Storage is not empty', $output);
-        $this->assertContains($bucketId, $output);
+        $this->assertContains('Storage is not empty', $errorOutput);
+        $this->assertContains($bucketId, $errorOutput);
 
-        $this->assertEmpty($errorOutput);
+        $this->assertEmpty($output);
     }
 
     public function testExistingConfigsUserError(): void
@@ -218,9 +218,9 @@ class FunctionalTest extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Delete all existing component configurations', $output);
+        $this->assertContains('Delete all existing component configurations', $errorOutput);
 
-        $this->assertEmpty($errorOutput);
+        $this->assertEmpty($output);
     }
 
     public function testMissingRegionUriRun(): void
@@ -245,7 +245,7 @@ class FunctionalTest extends TestCase
         $runProcess->run();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains(' Missing region info', $runProcess->getOutput());
+        $this->assertContains(' Missing region info', $runProcess->getErrorOutput());
     }
 
     private function cleanupKbcProject(): void

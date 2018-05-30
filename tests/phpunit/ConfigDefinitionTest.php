@@ -47,27 +47,6 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
             ],
-            'config with extra params' => [
-                [
-                    'parameters' => [
-                        'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
-                        'accessKeyId' => 'test-user',
-                        '#secretAccessKey' => 'secret',
-                        '#sessionToken' => 'token',
-                        'other' => 'something',
-                    ],
-                ],
-                [
-                    'parameters' => [
-                        'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
-                        'accessKeyId' => 'test-user',
-                        '#secretAccessKey' => 'secret',
-                        '#sessionToken' => 'token',
-                        'other' => 'something',
-                        'useDefaultBackend' => false,
-                    ],
-                ],
-            ],
         ];
     }
 
@@ -98,6 +77,15 @@ class ConfigDefinitionTest extends TestCase
                 ],
                 InvalidConfigurationException::class,
                 'The child node "backupUri" at path "root.parameters" must be configured.',
+            ],
+            'extra parameters' => [
+                [
+                    'parameters' => [
+                        'other' => 'something',
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'Unrecognized option "other" under "root.parameters"',
             ],
             'missing accessKeyId' => [
                 [

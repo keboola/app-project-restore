@@ -12,9 +12,6 @@ use Keboola\ProjectRestore\S3Restore;
 use Keboola\StorageApi\Client as StorageApi;
 use Keboola\StorageApi\Components;
 use Keboola\StorageApi\Exception as StorageApiException;
-use Monolog\Formatter\LineFormatter;
-use Monolog\Handler\StreamHandler;
-use Monolog\Logger;
 
 class Component extends BaseComponent
 {
@@ -44,13 +41,12 @@ class Component extends BaseComponent
         }
 
         $storageApi = $this->initSapi();
-        $logger = $this->initLogger();
 
         $this->validateProject($storageApi);
 
         $s3Client = $this->initS3($s3Region);
 
-        $restore = new S3Restore($s3Client, $storageApi, $logger);
+        $restore = new S3Restore($s3Client, $storageApi, $this->getLogger());
 
         try {
             $restore->restoreBuckets($s3Bucket, $s3Path, !$params['useDefaultBackend']);
@@ -65,12 +61,12 @@ class Component extends BaseComponent
 
         // notify orchestrations
         if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'orchestrator'))) {
-            $logger->warning('Orchestrations was not restored. You can transfer orchestrations with Orchestrator Migrate App');
+            $this->getLogger()->warning('Orchestrations was not restored. You can transfer orchestrations with Orchestrator Migrate App');
         }
 
         // notify gooddata writers
         if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'gooddata-writer'))) {
-            $logger->warning('GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App');
+            $this->getLogger()->warning('GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App');
         }
     }
 
@@ -82,27 +78,6 @@ class Component extends BaseComponent
     protected function getConfigDefinitionClass(): string
     {
         return ConfigDefinition::class;
-    }
-
-    private function initLogger(): Logger
-    {
-        $formatter = new LineFormatter("%message%\n");
-
-        $errorHandler = new StreamHandler('php://stderr', Logger::WARNING, false);
-        $errorHandler->setFormatter($formatter);
-
-        $handler = new StreamHandler('php://stdout', Logger::INFO);
-        $handler->setFormatter($formatter);
-
-        $logger = new Logger(
-            getenv('KBC_COMPONENTID')?: 'project-restore',
-            [
-                $errorHandler,
-                $handler,
-            ]
-        );
-
-        return $logger;
     }
 
     private function initSapi(): StorageApi

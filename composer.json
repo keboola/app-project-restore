@@ -3,7 +3,7 @@
     "license": "MIT",
     "require": {
         "PHP": "^7.1",
-        "keboola/php-component": "^3.0",
+        "keboola/php-component": "~4.1.1",
         "keboola/kbc-project-restore": "^1.1"
     },
     "require-dev": {
