@@ -8,6 +8,7 @@ services:
     environment:
       - TEST_STORAGE_API_URL
       - TEST_STORAGE_API_TOKEN
+      - TEST_COMPONENT_ID
       - TEST_AWS_ACCESS_KEY_ID
       - TEST_AWS_SECRET_ACCESS_KEY
       - TEST_AWS_REGION
