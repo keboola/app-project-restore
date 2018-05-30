@@ -11,8 +11,6 @@ $basedir = dirname(__FILE__);
 require_once $basedir . '/bootstrap.php';
 
 echo "Loading fixtures to S3\n";
-
-// delete from S3
 $s3Client = new \Aws\S3\S3Client([
     'version' => 'latest',
     'region' => getenv('TEST_AWS_REGION'),
@@ -21,7 +19,29 @@ $s3Client = new \Aws\S3\S3Client([
         'secret' => getenv('TEST_AWS_SECRET_ACCESS_KEY'),
     ],
 ]);
-$s3Client->deleteMatchingObjects(getenv('TEST_AWS_S3_BUCKET'), '*');
+
+
+// Clean S3 bucket
+echo "Removing existing objects from S3\n";
+$result = $s3Client->listObjects(['Bucket' => getenv('TEST_AWS_S3_BUCKET')])->toArray();
+if (isset($result['Contents'])) {
+    if (count($result['Contents']) > 0) {
+        $result = $s3Client->deleteObjects(
+            [
+                'Bucket' => getenv('TEST_AWS_S3_BUCKET'),
+                'Delete' => ['Objects' => $result['Contents']],
+            ]
+        );
+    }
+}
+
+// Check if all files aws deleted - prevent no delete permission
+$result = $s3Client->listObjects(['Bucket' => getenv('TEST_AWS_S3_BUCKET')])->toArray();
+if (isset($result['Contents'])) {
+    if (count($result['Contents']) > 0) {
+        throw new \Exception('AWS S3 bucket is not empty');
+    }
+}
 
 // Where the files will be source from
 $source = $basedir . '/data';
@@ -30,6 +50,7 @@ $source = $basedir . '/data';
 $dest = 's3://' . getenv('TEST_AWS_S3_BUCKET') . '/';
 
 // Create a transfer object.
+echo "Updating fixtures in S3\n";
 $manager = new \Aws\S3\Transfer($s3Client, $source, $dest, []);
 
 // Perform the transfer synchronously.
