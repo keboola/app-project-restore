@@ -69,6 +69,42 @@
     ]
   },
   {
+    "id": "keboola.wr-db-snowflake",
+    "type": "writer",
+    "name": "Snowflake",
+    "description": "Cloud-Native Elastic Data Warehouse Service",
+    "longDescription": "Writes data into Snowflake Data Warehouse. [https:\/\/www.snowflake.net](https:\/\/www.snowflake.net)",
+    "hasUI": false,
+    "hasRun": false,
+    "ico32": "https:\/\/assets-cdn.keboola.com\/developer-portal\/icons\/keboola.wr-db-snowflake\/32\/1.png",
+    "ico64": "https:\/\/assets-cdn.keboola.com\/developer-portal\/icons\/keboola.wr-db-snowflake\/64\/1.png",
+    "data": [],
+    "flags": [
+      "excludeRun",
+      "genericDockerUI"
+    ],
+    "configurationSchema": [],
+    "emptyConfiguration": [],
+    "uiOptions": [],
+    "configurationDescription": null,
+    "uri": "https:\/\/syrup.keboola.com\/docker\/keboola.wr-db-snowflake",
+    "configurations": [
+      {
+        "id": "48178598",
+        "name": "Main",
+        "description": "",
+        "created": "2016-11-07T02:18:19+0100",
+        "creatorToken": {
+          "id": 63470,
+          "description": "ondrej.hlavacek@keboola.com"
+        },
+        "version": 1,
+        "changeDescription": "",
+        "configuration": []
+      }
+    ]
+  },
+  {
     "id": "orchestrator",
     "type": "other",
     "name": "Orchestrator",
