@@ -61,17 +61,23 @@ class Component extends BaseComponent
 
         // notify orchestrations
         if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'orchestrator'))) {
-            $this->getLogger()->warning('Orchestrations was not restored. You can transfer orchestrations with Orchestrator Migrate App');
+            $this->getLogger()->warning(
+                'Orchestrations was not restored. You can transfer orchestrations with Orchestrator Migrate App'
+            );
         }
 
         // notify gooddata writers
         if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'gooddata-writer'))) {
-            $this->getLogger()->warning('GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App');
+            $this->getLogger()->warning(
+                'GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App'
+            );
         }
 
         // notify snowflake writers
         if (count($restore->listConfigsInBackup($s3Bucket, $s3Path, 'keboola.wr-db-snowflake'))) {
-            $this->getLogger()->warning('Snowflake writers was not restored. You can transfer writers with Snowflake Writer Migrate App');
+            $this->getLogger()->warning(
+                'Snowflake writers was not restored. You can transfer writers with Snowflake Writer Migrate App'
+            );
         }
     }
 
@@ -149,7 +155,7 @@ class Component extends BaseComponent
         }
 
         if (count($components->listComponents())) {
-            throw new UserException("Project is not empty. Delete all existing component configurations.");
+            throw new UserException('Project is not empty. Delete all existing component configurations.');
         }
     }
 }

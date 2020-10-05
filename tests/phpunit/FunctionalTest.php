@@ -166,7 +166,11 @@ class FunctionalTest extends TestCase
         $configuration->setComponentId(getenv('TEST_COMPONENT_ID'))
             ->setConfigurationId('self')
             ->setName('Self configuration')
-            ->setConfiguration(json_decode(file_get_contents($this->temp->getTmpFolder() . '/config.json')));
+            ->setConfiguration(
+                json_decode(
+                    (string) file_get_contents($this->temp->getTmpFolder() . '/config.json')
+                )
+            );
 
         $components->addConfiguration($configuration);
 
@@ -230,7 +234,7 @@ class FunctionalTest extends TestCase
         $fileSystem = new Filesystem();
         $fileSystem->dumpFile(
             $this->temp->getTmpFolder() . '/config.json',
-            \json_encode([
+            (string) json_encode([
                 'parameters' => array_merge(
                     [
                         'backupUri' => sprintf(
@@ -265,12 +269,12 @@ class FunctionalTest extends TestCase
         // drop linked buckets
         foreach ($this->sapiClient->listBuckets() as $bucket) {
             if (isset($bucket['sourceBucket'])) {
-                $this->sapiClient->dropBucket($bucket["id"], ["force" => true]);
+                $this->sapiClient->dropBucket($bucket['id'], ['force' => true]);
             }
         }
 
         foreach ($this->sapiClient->listBuckets() as $bucket) {
-            $this->sapiClient->dropBucket($bucket["id"], ["force" => true]);
+            $this->sapiClient->dropBucket($bucket['id'], ['force' => true]);
         }
     }
 
@@ -311,8 +315,8 @@ class FunctionalTest extends TestCase
 
     private function createTestProcess(?string $configId = null): Process
     {
-        $runCommand = "php /code/src/run.php";
-        return new  Process(
+        $runCommand = 'php /code/src/run.php';
+        return Process::fromShellCommandline(
             $runCommand,
             null,
             [
@@ -335,7 +339,7 @@ class FunctionalTest extends TestCase
         $fileSystem = new Filesystem();
         $fileSystem->dumpFile(
             $configFile->getPathname(),
-            \json_encode([
+            (string) json_encode([
                 'parameters' => array_merge(
                     [
                         'backupUri' => sprintf(
