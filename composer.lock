@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "7bf3060834007230d6a832723b1d121a",
+    "content-hash": "f655915d86fc5188c4948becefac33ec",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -313,16 +313,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "1.2.0",
+            "version": "1.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "15217eb22fb08d00b3f98b239857c2b1eb0fabd4"
+                "reference": "afbdde107f33ef2b5d1b2009dc9fb7f3897a00dd"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/15217eb22fb08d00b3f98b239857c2b1eb0fabd4",
-                "reference": "15217eb22fb08d00b3f98b239857c2b1eb0fabd4",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/afbdde107f33ef2b5d1b2009dc9fb7f3897a00dd",
+                "reference": "afbdde107f33ef2b5d1b2009dc9fb7f3897a00dd",
                 "shasum": ""
             },
             "require": {
@@ -355,7 +355,7 @@
                 }
             ],
             "description": "Restore KBC project",
-            "time": "2020-10-05T09:49:40+00:00"
+            "time": "2020-10-12T11:57:01+00:00"
         },
         {
             "name": "keboola/php-component",
