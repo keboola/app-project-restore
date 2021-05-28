@@ -29,7 +29,9 @@
     "scripts": {
         "tests-phpunit": "phpunit",
         "tests-prepare-s3": "php ./tests/phpunit/loadToS3.php",
+        "tests-prepare-abs": "php ./tests/phpunit/loadToAbs.php",
         "tests": [
+            "@tests-prepare-abs",
             "@tests-prepare-s3",
             "@tests-phpunit"
         ],

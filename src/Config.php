@@ -48,12 +48,12 @@ class Config extends BaseConfig
 
     public function getAbsConnectionString(): string
     {
-        return $this->getValue(['parameters', '#connectionString']);
+        return $this->getValue(['parameters', 'abs', '#connectionString']);
     }
 
     public function getAbsContainer(): string
     {
-        return $this->getValue(['parameters', 'container']);
+        return $this->getValue(['parameters', 'abs', 'container']);
     }
 
     public function getKbcUrl(): string

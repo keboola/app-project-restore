@@ -28,7 +28,7 @@ class ConfigDefinitionTest extends TestCase
     public function provideValidConfigs(): array
     {
         return [
-            'config' => [
+            'config s3' => [
                 [
                     'parameters' => [
                         's3' => [
@@ -46,6 +46,25 @@ class ConfigDefinitionTest extends TestCase
                             'accessKeyId' => 'test-user',
                             '#secretAccessKey' => 'secret',
                             '#sessionToken' => 'token',
+                        ],
+                        'useDefaultBackend' => false,
+                    ],
+                ],
+            ],
+            'config abs' => [
+                [
+                    'parameters' => [
+                        'abs' => [
+                            'container' => 'test-container',
+                            '#connectionString' => 'secret',
+                        ],
+                    ],
+                ],
+                [
+                    'parameters' => [
+                        'abs' => [
+                            'container' => 'test-container',
+                            '#connectionString' => 'secret',
                         ],
                         'useDefaultBackend' => false,
                     ],
@@ -140,6 +159,28 @@ class ConfigDefinitionTest extends TestCase
                 ],
                 InvalidConfigurationException::class,
                 'Invalid type for path "root.parameters.useDefaultBackend". Expected boolean, but got string.',
+            ],
+            'missing container' => [
+                [
+                    'parameters' => [
+                        'abs' => [
+                            '#connectionString' => 'secret',
+                        ],
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'The child node "container" at path "root.parameters.abs" must be configured.',
+            ],
+            'missing connectionString' => [
+                [
+                    'parameters' => [
+                        'abs' => [
+                            'container' => 'test-container',
+                        ],
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'The child node "#connectionString" at path "root.parameters.abs" must be configured.',
             ],
         ];
     }
