@@ -14,27 +14,15 @@ use PHPUnit\Framework\TestCase;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
-class FunctionalTest extends TestCase
+class FunctionalS3Test extends TestCase
 {
-    /**
-     * @var Temp
-     */
-    protected $temp;
+    protected Temp $temp;
 
-    /**
-     * @var StorageApi
-     */
-    protected $sapiClient;
+    protected StorageApi $sapiClient;
 
-    /**
-     * @var S3Client
-     */
-    protected $s3Client;
+    protected S3Client $s3Client;
 
-    /**
-     * @var string
-     */
-    private $testRunId;
+    private string $testRunId;
 
     public function setUp(): void
     {
@@ -237,10 +225,12 @@ class FunctionalTest extends TestCase
             (string) json_encode([
                 'parameters' => array_merge(
                     [
-                        'backupUri' => sprintf(
-                            'https://%s.i-dont-know.com',
-                            getenv('TEST_AWS_S3_BUCKET')
-                        ),
+                        's3' => [
+                            'backupUri' => sprintf(
+                                'https://%s.i-dont-know.com',
+                                getenv('TEST_AWS_S3_BUCKET')
+                            ),
+                        ],
                     ],
                     $this->generateFederationTokenForParams()
                 ),
@@ -302,7 +292,7 @@ class FunctionalTest extends TestCase
 
         $federationToken = $sts->getFederationToken([
             'DurationSeconds' => 3600,
-            'Name' => 'GetProjectRestoreFile',
+            'Name' => 'GetProjectBackupFile',
             'Policy' => json_encode($policy),
         ]);
 
@@ -340,17 +330,20 @@ class FunctionalTest extends TestCase
         $fileSystem->dumpFile(
             $configFile->getPathname(),
             (string) json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com/%s/',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION'),
-                            $testCase
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
+                'parameters' => [
+                    's3' => array_merge(
+                        [
+                            'backupUri' => sprintf(
+                                'https://%s.s3.%s.amazonaws.com/%s/',
+                                getenv('TEST_AWS_S3_BUCKET'),
+                                getenv('TEST_AWS_REGION'),
+                                $testCase
+                            ),
+                        ],
+                        $this->generateFederationTokenForParams()
+                    ),
+                ],
+
             ])
         );
 
