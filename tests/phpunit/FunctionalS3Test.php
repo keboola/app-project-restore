@@ -223,17 +223,17 @@ class FunctionalS3Test extends TestCase
         $fileSystem->dumpFile(
             $this->temp->getTmpFolder() . '/config.json',
             (string) json_encode([
-                'parameters' => array_merge(
-                    [
-                        's3' => [
+                'parameters' => [
+                    's3' => array_merge(
+                        [
                             'backupUri' => sprintf(
                                 'https://%s.i-dont-know.com',
                                 getenv('TEST_AWS_S3_BUCKET')
                             ),
                         ],
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
+                        $this->generateFederationTokenForParams()
+                    ),
+                ],
             ])
         );
 
@@ -292,7 +292,7 @@ class FunctionalS3Test extends TestCase
 
         $federationToken = $sts->getFederationToken([
             'DurationSeconds' => 3600,
-            'Name' => 'GetProjectBackupFile',
+            'Name' => 'GetProjectRestoreFile',
             'Policy' => json_encode($policy),
         ]);
 
