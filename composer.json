@@ -1,10 +1,12 @@
 {
     "name": "keboola/app-project-restore",
+    "description": "Restore project to Keboola Connection",
     "license": "MIT",
     "require": {
-        "PHP": "^7.1",
-        "keboola/kbc-project-restore": "^1.3",
-        "keboola/php-component": "~4.1.1"
+        "PHP": "^7.4",
+        "keboola/kbc-project-restore": "^2.0",
+        "keboola/php-component": "~4.1.1",
+        "microsoft/azure-storage-blob": "^1.5"
     },
     "require-dev": {
         "keboola/coding-standard": "^9.0",
@@ -27,7 +29,9 @@
     "scripts": {
         "tests-phpunit": "phpunit",
         "tests-prepare-s3": "php ./tests/phpunit/loadToS3.php",
+        "tests-prepare-abs": "php ./tests/phpunit/loadToAbs.php",
         "tests": [
+            "@tests-prepare-abs",
             "@tests-prepare-s3",
             "@tests-phpunit"
         ],

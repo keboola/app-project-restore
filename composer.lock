@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "f655915d86fc5188c4948becefac33ec",
+    "content-hash": "4b29e1662bd2b04a2b9417b461824de5",
     "packages": [
         {
             "name": "aws/aws-sdk-php",
@@ -334,23 +334,23 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "1.4.1",
+            "version": "2.0.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "76a97cb777e62b152d55a4f45bdffd965e9b0b64"
+                "reference": "6552e7d1d87e43830674cc2d611cf7f24854fa50"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/76a97cb777e62b152d55a4f45bdffd965e9b0b64",
-                "reference": "76a97cb777e62b152d55a4f45bdffd965e9b0b64",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/6552e7d1d87e43830674cc2d611cf7f24854fa50",
+                "reference": "6552e7d1d87e43830674cc2d611cf7f24854fa50",
                 "shasum": ""
             },
             "require": {
                 "keboola/php-temp": "^1.0.0",
                 "keboola/storage-api-client": "^11.3",
                 "monolog/monolog": "^1.23",
-                "php": "^7.1"
+                "php": "^7.4"
             },
             "require-dev": {
                 "keboola/coding-standard": "^9.0",
@@ -378,9 +378,9 @@
             "description": "Restore KBC project",
             "support": {
                 "issues": "https://github.com/keboola/php-kbc-project-restore/issues",
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/1.4.1"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.0.0"
             },
-            "time": "2021-01-04T12:54:22+00:00"
+            "time": "2021-05-31T08:49:39+00:00"
         },
         {
             "name": "keboola/php-component",
@@ -3558,7 +3558,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^7.1"
+        "php": "^7.4"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"

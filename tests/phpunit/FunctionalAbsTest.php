@@ -4,37 +4,28 @@ declare(strict_types=1);
 
 namespace Keboola\App\ProjectRestore\Tests;
 
-use Aws\S3\S3Client;
-use Aws\Sts\StsClient;
+use DateTime;
 use Keboola\StorageApi\Client as StorageApi;
 use Keboola\StorageApi\Components;
 use Keboola\StorageApi\Options\Components\Configuration;
 use Keboola\Temp\Temp;
+use MicrosoftAzure\Storage\Blob\BlobRestProxy;
+use MicrosoftAzure\Storage\Blob\BlobSharedAccessSignatureHelper;
+use MicrosoftAzure\Storage\Common\Internal\Resources;
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
-class FunctionalTest extends TestCase
+class FunctionalAbsTest extends TestCase
 {
-    /**
-     * @var Temp
-     */
-    protected $temp;
+    protected Temp $temp;
 
-    /**
-     * @var StorageApi
-     */
-    protected $sapiClient;
+    protected StorageApi $sapiClient;
 
-    /**
-     * @var S3Client
-     */
-    protected $s3Client;
+    protected BlobRestProxy $absClient;
 
-    /**
-     * @var string
-     */
-    private $testRunId;
+    private string $testRunId;
 
     public function setUp(): void
     {
@@ -50,13 +41,11 @@ class FunctionalTest extends TestCase
 
         $this->cleanupKbcProject();
 
-        putenv('AWS_ACCESS_KEY_ID=' . getenv('TEST_AWS_ACCESS_KEY_ID'));
-        putenv('AWS_SECRET_ACCESS_KEY=' . getenv('TEST_AWS_SECRET_ACCESS_KEY'));
-
-        $this->s3Client = new S3Client([
-            'version' => 'latest',
-            'region' => getenv('TEST_AWS_REGION'),
-        ]);
+        $this->absClient = BlobRestProxy::createBlobService(sprintf(
+            'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s;EndpointSuffix=core.windows.net',
+            (string) getenv('TEST_AZURE_ACCOUNT_NAME'),
+            (string) getenv('TEST_AZURE_ACCOUNT_KEY')
+        ));
 
         $this->testRunId = $this->sapiClient->generateRunId();
     }
@@ -73,7 +62,7 @@ class FunctionalTest extends TestCase
 
         $this->assertNotRegExp('/Restoring bucket /', $output);
         $this->assertNotRegExp('/Restoring table /', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
         $this->assertEmpty($errorOutput);
     }
@@ -88,8 +77,8 @@ class FunctionalTest extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertContains('Restoring bucket ', $output);
-        $this->assertContains('Restoring table ', $output);
+        $this->assertStringContainsString('Restoring bucket ', $output);
+        $this->assertStringContainsString('Restoring table ', $output);
         $this->assertNotRegExp('/Restoring [^\s]+ configurations/', $output);
 
         $this->assertEmpty($errorOutput);
@@ -130,11 +119,11 @@ class FunctionalTest extends TestCase
 
         $this->assertNotRegExp('/Restoring bucket /', $output);
         $this->assertNotRegExp('/Restoring table /', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
-        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
-        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
-        $this->assertContains('Skipping keboola.wr-db-snowflake configurations', $errorOutput);
+        $this->assertStringContainsString('Skipping orchestrator configurations', $errorOutput);
+        $this->assertStringContainsString('Skipping gooddata-writer configurations', $errorOutput);
+        $this->assertStringContainsString('Skipping keboola.wr-db-snowflake configurations', $errorOutput);
     }
 
     public function testRestoreConfigsAppNotify(): void
@@ -149,11 +138,11 @@ class FunctionalTest extends TestCase
 
         $this->assertNotRegExp('/Restoring bucket /', $output);
         $this->assertNotRegExp('/Restoring table /', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
-        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
-        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
-        $this->assertContains('You can transfer writers with Snowflake', $errorOutput);
+        $this->assertStringContainsString('You can transfer orchestrations with Orchestrator', $errorOutput);
+        $this->assertStringContainsString('You can transfer writers with GoodData', $errorOutput);
+        $this->assertStringContainsString('You can transfer writers with Snowflake', $errorOutput);
     }
 
     public function testIgnoreSelfConfig(): void
@@ -180,7 +169,7 @@ class FunctionalTest extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
         $this->assertEmpty($errorOutput);
     }
@@ -198,8 +187,8 @@ class FunctionalTest extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Storage is not empty', $errorOutput);
-        $this->assertContains($bucketId, $errorOutput);
+        $this->assertStringContainsString('Storage is not empty', $errorOutput);
+        $this->assertStringContainsString($bucketId, $errorOutput);
 
         $this->assertEmpty($output);
     }
@@ -224,34 +213,9 @@ class FunctionalTest extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Delete all existing component configurations', $errorOutput);
+        $this->assertStringContainsString('Delete all existing component configurations', $errorOutput);
 
         $this->assertEmpty($output);
-    }
-
-    public function testMissingRegionUriRun(): void
-    {
-        $fileSystem = new Filesystem();
-        $fileSystem->dumpFile(
-            $this->temp->getTmpFolder() . '/config.json',
-            (string) json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.i-dont-know.com',
-                            getenv('TEST_AWS_S3_BUCKET')
-                        ),
-                    ],
-                    $this->generateFederationTokenForParams()
-                ),
-            ])
-        );
-
-        $runProcess = $this->createTestProcess();
-        $runProcess->run();
-
-        $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains(' Missing region info', $runProcess->getErrorOutput());
     }
 
     private function cleanupKbcProject(): void
@@ -278,39 +242,29 @@ class FunctionalTest extends TestCase
         }
     }
 
-    private function generateFederationTokenForParams(): array
+    private function generateFederationTokenForParams(string $blobPrefix): string
     {
-        $sts =  new StsClient([
-            'version' => 'latest',
-            'region' => getenv('TEST_AWS_REGION'),
-        ]);
+        $sasHelper = new BlobSharedAccessSignatureHelper(
+            (string) getenv('TEST_AZURE_ACCOUNT_NAME'),
+            (string) getenv('TEST_AZURE_ACCOUNT_KEY')
+        );
 
-        $policy = [
-            'Statement' => [
-                [
-                    'Effect' =>'Allow',
-                    'Action' => 's3:GetObject',
-                    'Resource' => ['arn:aws:s3:::' . getenv('TEST_AWS_S3_BUCKET') . '/*'],
-                ],
-                [
-                    'Effect' => 'Allow',
-                    'Action' => 's3:ListBucket',
-                    'Resource' => ['arn:aws:s3:::' . getenv('TEST_AWS_S3_BUCKET')],
-                ],
-            ],
-        ];
+        $expirationDate = (new DateTime())->modify('+1hour');
 
-        $federationToken = $sts->getFederationToken([
-            'DurationSeconds' => 3600,
-            'Name' => 'GetProjectRestoreFile',
-            'Policy' => json_encode($policy),
-        ]);
+        $sasToken = $sasHelper->generateBlobServiceSharedAccessSignatureToken(
+            Resources::RESOURCE_TYPE_CONTAINER,
+            (string) getenv('TEST_AZURE_CONTAINER_NAME') . '-' . $blobPrefix,
+            'rl',
+            $expirationDate,
+            new DateTime('now')
+        );
 
-        return [
-            'accessKeyId' => $federationToken['Credentials']['AccessKeyId'],
-            '#secretAccessKey' => $federationToken['Credentials']['SecretAccessKey'],
-            '#sessionToken' => $federationToken['Credentials']['SessionToken'],
-        ];
+        return sprintf(
+            '%s=https://%s.blob.core.windows.net;SharedAccessSignature=%s',
+            Resources::BLOB_ENDPOINT_NAME,
+            getenv('TEST_AZURE_ACCOUNT_NAME'),
+            $sasToken
+        );
     }
 
     private function createTestProcess(?string $configId = null): Process
@@ -332,28 +286,22 @@ class FunctionalTest extends TestCase
         );
     }
 
-    private function createConfigFile(string $testCase): \SplFileInfo
+    private function createConfigFile(string $blobPrefix): void
     {
-        $configFile = new \SplFileInfo($this->temp->getTmpFolder() . '/config.json');
+        $configFile = new SplFileInfo($this->temp->getTmpFolder() . '/config.json');
 
         $fileSystem = new Filesystem();
         $fileSystem->dumpFile(
             $configFile->getPathname(),
             (string) json_encode([
-                'parameters' => array_merge(
-                    [
-                        'backupUri' => sprintf(
-                            'https://%s.s3.%s.amazonaws.com/%s/',
-                            getenv('TEST_AWS_S3_BUCKET'),
-                            getenv('TEST_AWS_REGION'),
-                            $testCase
-                        ),
+                'parameters' => [
+                    'abs' => [
+                        'container' => getenv('TEST_AZURE_CONTAINER_NAME') . '-' . $blobPrefix,
+                        '#connectionString' => $this->generateFederationTokenForParams($blobPrefix),
                     ],
-                    $this->generateFederationTokenForParams()
-                ),
+                ],
+
             ])
         );
-
-        return $configFile;
     }
 }

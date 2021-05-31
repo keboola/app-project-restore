@@ -6,6 +6,7 @@ namespace Keboola\App\ProjectRestore;
 
 use Keboola\Component\Config\BaseConfigDefinition;
 use Symfony\Component\Config\Definition\Builder\ArrayNodeDefinition;
+use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 
 class ConfigDefinition extends BaseConfigDefinition
 {
@@ -15,21 +16,34 @@ class ConfigDefinition extends BaseConfigDefinition
         // @formatter:off
         /** @noinspection NullPointerExceptionInspection */
         $parametersNode
+            ->validate()
+                ->always(function ($v) {
+                    if (!empty($v['abs']) && !empty($v['s3'])) {
+                        throw new InvalidConfigurationException('Both ABS and S3 cannot be set together.');
+                    }
+                    if (empty($v['abs']) && empty($v['s3'])) {
+                        throw new InvalidConfigurationException('ABS or S3 must be configured.');
+                    }
+                    return $v;
+                })
+            ->end()
             ->children()
-                ->scalarNode('backupUri')
-                    ->isRequired()
-                ->end()
                 ->booleanNode('useDefaultBackend')
                     ->defaultValue(false)
                 ->end()
-                ->scalarNode('accessKeyId')
-                    ->isRequired()
+                ->arrayNode('abs')
+                    ->children()
+                        ->scalarNode('container')->isRequired()->end()
+                        ->scalarNode('#connectionString')->isRequired()->end()
+                    ->end()
                 ->end()
-                ->scalarNode('#secretAccessKey')
-                    ->isRequired()
-                ->end()
-                ->scalarNode('#sessionToken')
-                    ->isRequired()
+                ->arrayNode('s3')
+                    ->children()
+                        ->scalarNode('backupUri')->isRequired()->end()
+                        ->scalarNode('accessKeyId')->isRequired()->end()
+                        ->scalarNode('#secretAccessKey')->isRequired()->end()
+                        ->scalarNode('#sessionToken')->isRequired()->end()
+                    ->end()
                 ->end()
             ->end()
         ;
