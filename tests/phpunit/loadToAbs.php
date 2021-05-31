@@ -2,13 +2,9 @@
 
 declare(strict_types=1);
 
-use Keboola\ProjectRestore\Tests\AbsRestoreTest;
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Blob\Models\Container;
-use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Finder\Finder;
-use Keboola\Temp\Temp;
-use Keboola\Csv\CsvFile;
 
 date_default_timezone_set('Europe/Prague');
 ini_set('display_errors', '1');
@@ -30,28 +26,34 @@ echo 'Cleanup files in ABS' . PHP_EOL;
 $containers = $absClient->listContainers();
 $listContainers = array_map(fn(Container $v) => $v->getName(), $containers->getContainers());
 
-if (!in_array((string) getenv('TEST_AZURE_CONTAINER_NAME'), $listContainers)) {
-    $absClient->createContainer((string) getenv('TEST_AZURE_CONTAINER_NAME'));
-}
-
-$blobs = $absClient->listBlobs((string) getenv('TEST_AZURE_CONTAINER_NAME'));
-foreach ($blobs->getBlobs() as $blob) {
-    $absClient->deleteBlob((string) getenv('TEST_AZURE_CONTAINER_NAME'), $blob->getName());
-}
-
 echo 'Copying new files into ABS' . PHP_EOL;
 $finder = new Finder();
-$files = $finder->in($basedir . '/data')->files();
-foreach ($files as $file) {
-    $fopen = fopen($file->getPathname(), 'r');
-    if (!$fopen) {
-        continue;
+$dirs = $finder->depth(0)->in($basedir . '/data')->directories();
+
+foreach ($dirs as $dir) {
+    $container = getenv('TEST_AZURE_CONTAINER_NAME') . '-' . $dir->getRelativePathname();
+    if (!in_array($container, $listContainers)) {
+        $absClient->createContainer($container);
     }
-    $absClient->createBlockBlob(
-        (string) getenv('TEST_AZURE_CONTAINER_NAME'),
-        $file->getRelativePathname(),
-        $fopen
-    );
+
+    $blobs = $absClient->listBlobs($container);
+    foreach ($blobs->getBlobs() as $blob) {
+        $absClient->deleteBlob($container, $blob->getName());
+    }
+
+    $finder = new Finder();
+    $files = $finder->in($dir->getPathname())->files();
+    foreach ($files as $file) {
+        $fopen = fopen($file->getPathname(), 'r');
+        if (!$fopen) {
+            continue;
+        }
+        $absClient->createBlockBlob(
+            $container,
+            $file->getRelativePathname(),
+            $fopen
+        );
+    }
 }
 
 echo 'Fixtures load complete' . PHP_EOL;

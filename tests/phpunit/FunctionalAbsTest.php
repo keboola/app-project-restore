@@ -242,7 +242,7 @@ class FunctionalAbsTest extends TestCase
         }
     }
 
-    private function generateFederationTokenForParams(): string
+    private function generateFederationTokenForParams(string $blobPrefix): string
     {
         $sasHelper = new BlobSharedAccessSignatureHelper(
             (string) getenv('TEST_AZURE_ACCOUNT_NAME'),
@@ -253,7 +253,7 @@ class FunctionalAbsTest extends TestCase
 
         $sasToken = $sasHelper->generateBlobServiceSharedAccessSignatureToken(
             Resources::RESOURCE_TYPE_CONTAINER,
-            (string) getenv('TEST_AZURE_CONTAINER_NAME'),
+            (string) getenv('TEST_AZURE_CONTAINER_NAME') . '-' . $blobPrefix,
             'rl',
             $expirationDate,
             new DateTime('now')
@@ -296,8 +296,8 @@ class FunctionalAbsTest extends TestCase
             (string) json_encode([
                 'parameters' => [
                     'abs' => [
-                        'container' => getenv('TEST_AZURE_CONTAINER_NAME') . '/' . $blobPrefix,
-                        '#connectionString' => $this->generateFederationTokenForParams(),
+                        'container' => getenv('TEST_AZURE_CONTAINER_NAME') . '-' . $blobPrefix,
+                        '#connectionString' => $this->generateFederationTokenForParams($blobPrefix),
                     ],
                 ],
 
