@@ -25,6 +25,7 @@ class Application
         'orchestrator',
         'gooddata-writer',
         'keboola.wr-db-snowflake',
+        'keboola.wr-snowflake-blob-storage',
     ];
 
     public function __construct(Config $config, LoggerInterface $logger)
@@ -75,7 +76,9 @@ class Application
         }
 
         // notify snowflake writers
-        if (count($restore->listConfigsInBackup('keboola.wr-db-snowflake'))) {
+        if (count($restore->listConfigsInBackup('keboola.wr-db-snowflake'))
+            || count($restore->listConfigsInBackup('keboola.wr-snowflake-blob-storage'))
+        ) {
             $this->logger->warning(
                 'Snowflake writers was not restored. You can transfer writers with Snowflake Writer Migrate App'
             );
