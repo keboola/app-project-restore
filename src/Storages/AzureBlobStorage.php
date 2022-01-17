@@ -33,7 +33,7 @@ class AzureBlobStorage implements IStorage
         $absClient = BlobRestProxy::createBlobService($this->config->getAbsConnectionString());
         $absClient->pushMiddleware(
             RetryMiddlewareFactory::create(
-                RetryMiddlewareFactory::EXPONENTIAL_INTERVAL_ACCUMULATION,
+                RetryMiddlewareFactory::GENERAL_RETRY_TYPE,
                 self::MAX_RETRIES
             )
         );
