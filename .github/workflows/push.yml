@@ -29,7 +29,7 @@ env:
   TEST_COMPONENT_ID: "keboola.project-restore"
 
   # DockerHub login
-  DOCKERHUB_USER: "{{env(DOCKERHUB_USER)}}"
+  DOCKERHUB_USER: "keboolabot"
   DOCKERHUB_TOKEN: ${{ secrets.DOCKERHUB_TOKEN }}
 
 jobs:
