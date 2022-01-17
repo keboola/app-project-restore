@@ -28,6 +28,8 @@ class AwsS3Storage implements IStorage
 
     public const FEDERATION_TOKEN_EXPIRATION_HOURS = 36;
 
+    private const MAX_RETRIES = 5;
+
     public function __construct(Config $config, LoggerInterface $logger)
     {
         $this->config = $config;
@@ -69,6 +71,7 @@ class AwsS3Storage implements IStorage
         return new S3Client([
             'version' => 'latest',
             'region' => $this->region,
+            'retries' => self::MAX_RETRIES,
             'credentials' => [
                 'key' => $this->config->getAwsAccessKeyId(),
                 'secret' => $this->config->getAwsSecretAccessKey(),
