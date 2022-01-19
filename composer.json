@@ -4,7 +4,7 @@
     "license": "MIT",
     "require": {
         "PHP": "^7.4",
-        "keboola/kbc-project-restore": "^2.2",
+        "keboola/kbc-project-restore": "^2.3",
         "keboola/php-component": "~4.1.1",
         "microsoft/azure-storage-blob": "^1.5"
     },
