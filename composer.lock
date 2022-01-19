@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "baa4b331dbe960012527798efdda995a",
+    "content-hash": "143bcc5b7263b842047e6319c2fcb096",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -58,16 +58,16 @@
         },
         {
             "name": "aws/aws-sdk-php",
-            "version": "3.209.6",
+            "version": "3.209.7",
             "source": {
                 "type": "git",
                 "url": "https://github.com/aws/aws-sdk-php.git",
-                "reference": "fc4ac03c6ec4acea81c01e8b785c8606943d1fd6"
+                "reference": "22bbcc0b25578d4c496756d9f46fcd4c27cffd5d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/fc4ac03c6ec4acea81c01e8b785c8606943d1fd6",
-                "reference": "fc4ac03c6ec4acea81c01e8b785c8606943d1fd6",
+                "url": "https://api.github.com/repos/aws/aws-sdk-php/zipball/22bbcc0b25578d4c496756d9f46fcd4c27cffd5d",
+                "reference": "22bbcc0b25578d4c496756d9f46fcd4c27cffd5d",
                 "shasum": ""
             },
             "require": {
@@ -143,9 +143,9 @@
             "support": {
                 "forum": "https://forums.aws.amazon.com/forum.jspa?forumID=80",
                 "issues": "https://github.com/aws/aws-sdk-php/issues",
-                "source": "https://github.com/aws/aws-sdk-php/tree/3.209.6"
+                "source": "https://github.com/aws/aws-sdk-php/tree/3.209.7"
             },
-            "time": "2022-01-14T19:29:33+00:00"
+            "time": "2022-01-18T19:16:05+00:00"
         },
         {
             "name": "guzzlehttp/guzzle",
@@ -449,16 +449,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.2.0",
+            "version": "2.3.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "7e46cf524b4e79c095a2fdf301152f7af7faf4bf"
+                "reference": "2382f338b561a5109a9279094bd051523c96eeb5"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/7e46cf524b4e79c095a2fdf301152f7af7faf4bf",
-                "reference": "7e46cf524b4e79c095a2fdf301152f7af7faf4bf",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/2382f338b561a5109a9279094bd051523c96eeb5",
+                "reference": "2382f338b561a5109a9279094bd051523c96eeb5",
                 "shasum": ""
             },
             "require": {
@@ -493,9 +493,9 @@
             "description": "Restore KBC project",
             "support": {
                 "issues": "https://github.com/keboola/php-kbc-project-restore/issues",
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.2.0"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.3.0"
             },
-            "time": "2022-01-18T13:28:09+00:00"
+            "time": "2022-01-18T17:59:32+00:00"
         },
         {
             "name": "keboola/php-component",
