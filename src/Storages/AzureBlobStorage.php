@@ -5,10 +5,10 @@ declare(strict_types=1);
 namespace Keboola\App\ProjectRestore\Storages;
 
 use Keboola\App\ProjectRestore\Config;
+use Keboola\FileStorage\Abs\ClientFactory;
 use Keboola\ProjectRestore\AbsRestore;
 use Keboola\ProjectRestore\Restore;
 use Keboola\StorageApi\Client;
-use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Common\Middlewares\RetryMiddlewareFactory;
 use Psr\Log\LoggerInterface;
 
@@ -30,7 +30,7 @@ class AzureBlobStorage implements IStorage
 
     public function getRestore(Client $sapi): Restore
     {
-        $absClient = BlobRestProxy::createBlobService($this->config->getAbsConnectionString());
+        $absClient = ClientFactory::createClientFromConnectionString($this->config->getAbsConnectionString());
         $absClient->pushMiddleware(
             RetryMiddlewareFactory::create(
                 RetryMiddlewareFactory::GENERAL_RETRY_TYPE,
