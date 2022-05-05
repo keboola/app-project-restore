@@ -46,7 +46,7 @@ class Application
     public function run(): void
     {
         $storageApi = $this->initSapi();
-        $this->validateProject($storageApi);
+        //$this->validateProject($storageApi);
 
         $params = $this->config->getParameters();
 
