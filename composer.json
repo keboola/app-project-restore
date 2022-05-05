@@ -42,7 +42,7 @@
         "phpcbf": "phpcbf -n --ignore=vendor --extensions=php .",
         "phplint": "parallel-lint -j 10 --exclude vendor .",
         "build": [
-            "@phplint",
+            "@phplint"
         ],
         "ci": [
             "@composer validate --no-check-publish --no-check-all",
