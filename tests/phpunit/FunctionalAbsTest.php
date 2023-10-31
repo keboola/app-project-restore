@@ -233,12 +233,24 @@ class FunctionalAbsTest extends TestCase
         // drop linked buckets
         foreach ($this->sapiClient->listBuckets() as $bucket) {
             if (isset($bucket['sourceBucket'])) {
-                $this->sapiClient->dropBucket($bucket['id'], ['force' => true]);
+                $this->sapiClient->dropBucket(
+                    $bucket['id'],
+                    [
+                        'force' => true,
+                        'async' => true,
+                    ],
+                );
             }
         }
 
         foreach ($this->sapiClient->listBuckets() as $bucket) {
-            $this->sapiClient->dropBucket($bucket['id'], ['force' => true]);
+            $this->sapiClient->dropBucket(
+                $bucket['id'],
+                [
+                    'force' => true,
+                    'async' => true,
+                ],
+            );
         }
     }
 
