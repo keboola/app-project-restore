@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "bfb172f26724d636caf829c430aed966",
+    "content-hash": "08cea018c2664a451e05908015bd1289",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -822,16 +822,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.6.0",
+            "version": "2.7.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "864974a28659f3460ea54da3817a72ab4c86e67c"
+                "reference": "3ef04c6bcbc4890470f88b12a462435299a8e50c"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/864974a28659f3460ea54da3817a72ab4c86e67c",
-                "reference": "864974a28659f3460ea54da3817a72ab4c86e67c",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/3ef04c6bcbc4890470f88b12a462435299a8e50c",
+                "reference": "3ef04c6bcbc4890470f88b12a462435299a8e50c",
                 "shasum": ""
             },
             "require": {
@@ -865,9 +865,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.6.0"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.7.0"
             },
-            "time": "2023-10-31T06:55:01+00:00"
+            "time": "2024-03-05T10:22:30+00:00"
         },
         {
             "name": "keboola/php-component",
@@ -4512,5 +4512,5 @@
         "php": "^7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.3.0"
 }
