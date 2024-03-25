@@ -48,6 +48,7 @@ class ConfigDefinitionTest extends TestCase
                             '#sessionToken' => 'token',
                         ],
                         'useDefaultBackend' => false,
+                        'restoreConfigs' => true,
                     ],
                 ],
             ],
@@ -58,6 +59,7 @@ class ConfigDefinitionTest extends TestCase
                             'container' => 'test-container',
                             '#connectionString' => 'secret',
                         ],
+                        'restoreConfigs' => false,
                     ],
                 ],
                 [
@@ -66,6 +68,7 @@ class ConfigDefinitionTest extends TestCase
                             'container' => 'test-container',
                             '#connectionString' => 'secret',
                         ],
+                        'restoreConfigs' => false,
                         'useDefaultBackend' => false,
                     ],
                 ],

@@ -51,7 +51,7 @@ class FunctionalS3Test extends TestCase
 
     public function testRestoreConfigs(): void
     {
-        $this->createConfigFile('configurations');
+        $this->createConfigFile('configurations', true);
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
@@ -66,9 +66,27 @@ class FunctionalS3Test extends TestCase
         $this->assertEmpty($errorOutput);
     }
 
+    public function testRestoreConfigsDisabled(): void
+    {
+        $this->createConfigFile('configurations', false);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertStringContainsString('Downloading buckets', $output);
+        $this->assertStringContainsString('Downloading tables', $output);
+        $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringNotContainsString('Restoring keboola.csv-import configurations', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
     public function testRestoreTables(): void
     {
-        $this->createConfigFile('tables');
+        $this->createConfigFile('tables', true);
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
@@ -88,7 +106,7 @@ class FunctionalS3Test extends TestCase
         $events = $this->sapiClient->listEvents(['runId' => $this->testRunId]);
         self::assertCount(0, $events);
 
-        $this->createConfigFile('tables');
+        $this->createConfigFile('tables', true);
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
@@ -108,7 +126,7 @@ class FunctionalS3Test extends TestCase
 
     public function testRestoreObsoleteConfigs(): void
     {
-        $this->createConfigFile('configurations-skip');
+        $this->createConfigFile('configurations-skip', true);
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
@@ -127,7 +145,7 @@ class FunctionalS3Test extends TestCase
 
     public function testRestoreConfigsAppNotify(): void
     {
-        $this->createConfigFile('configurations-skip');
+        $this->createConfigFile('configurations-skip', true);
 
         $runProcess = $this->createTestProcess();
         $runProcess->mustRun();
@@ -146,7 +164,7 @@ class FunctionalS3Test extends TestCase
 
     public function testIgnoreSelfConfig(): void
     {
-        $this->createConfigFile('configurations');
+        $this->createConfigFile('configurations', true);
 
         $components = new Components($this->sapiClient);
 
@@ -175,7 +193,7 @@ class FunctionalS3Test extends TestCase
 
     public function testExistingBucketsUserError(): void
     {
-        $this->createConfigFile('tables');
+        $this->createConfigFile('tables', true);
 
         $bucketId = $this->sapiClient->createBucket('old', StorageApi::STAGE_IN);
 
@@ -194,7 +212,7 @@ class FunctionalS3Test extends TestCase
 
     public function testExistingConfigsUserError(): void
     {
-        $this->createConfigFile('tables');
+        $this->createConfigFile('tables', true);
 
         $components = new Components($this->sapiClient);
 
@@ -334,7 +352,7 @@ class FunctionalS3Test extends TestCase
         );
     }
 
-    private function createConfigFile(string $testCase): \SplFileInfo
+    private function createConfigFile(string $testCase, bool $restoreConfigs): \SplFileInfo
     {
         $configFile = new \SplFileInfo($this->temp->getTmpFolder() . '/config.json');
 
@@ -354,6 +372,7 @@ class FunctionalS3Test extends TestCase
                         ],
                         $this->generateFederationTokenForParams()
                     ),
+                    'restoreConfigs' => $restoreConfigs,
                 ],
 
             ])
