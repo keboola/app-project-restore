@@ -54,6 +54,10 @@ class Application
 
         try {
             $restore->restoreBuckets(!$params['useDefaultBackend']);
+            $this->logger->info(sprintf(
+                'Should restore configurations: %s',
+                $this->config->shouldRestoreConfigs() ? 'yes' : 'no',
+            ));
             if ($this->config->shouldRestoreConfigs()) {
                 $restore->restoreConfigs(self::COMPONENTS_WITH_CUSTOM_RESTORE);
             }
