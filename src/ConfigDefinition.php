@@ -31,6 +31,7 @@ class ConfigDefinition extends BaseConfigDefinition
                 ->booleanNode('useDefaultBackend')
                     ->defaultValue(false)
                 ->end()
+                ->booleanNode('restoreConfigs')->defaultTrue()->end()
                 ->arrayNode('abs')
                     ->children()
                         ->scalarNode('container')->isRequired()->end()

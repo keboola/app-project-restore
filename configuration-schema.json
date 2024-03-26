@@ -46,6 +46,13 @@
       "minLength": 1,
       "description": "(Otherwise buckets will be created in same backend as in source project)",
       "propertyOrder": 5
+    },
+    "restoreConfigs": {
+      "type": "boolean",
+      "title": "Restore configurations",
+      "default": true,
+      "minLength": 1,
+      "propertyOrder": 6
     }
   }
 }

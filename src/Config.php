@@ -65,4 +65,9 @@ class Config extends BaseConfig
     {
         return (string) getenv('KBC_TOKEN');
     }
+
+    public function shouldRestoreConfigs(): bool
+    {
+        return $this->getValue(['parameters', 'restoreConfigs']);
+    }
 }
