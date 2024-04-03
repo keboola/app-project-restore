@@ -54,7 +54,9 @@ class Application
 
         try {
             $restore->restoreBuckets(!$params['useDefaultBackend']);
-            $restore->restoreConfigs(self::COMPONENTS_WITH_CUSTOM_RESTORE);
+            if ($this->config->shouldRestoreConfigs()) {
+                $restore->restoreConfigs(self::COMPONENTS_WITH_CUSTOM_RESTORE);
+            }
             $restore->restoreTables();
             $restore->restoreTableAliases();
         } catch (StorageApiException $e) {
