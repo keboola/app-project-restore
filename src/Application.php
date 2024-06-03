@@ -53,6 +53,7 @@ class Application
         $restore = $this->storageBackend->getRestore($storageApi);
 
         try {
+            $restore->restoreProjectMetadata();
             $restore->restoreBuckets(!$params['useDefaultBackend']);
             if ($this->config->shouldRestoreConfigs()) {
                 $restore->restoreConfigs(self::COMPONENTS_WITH_CUSTOM_RESTORE);
