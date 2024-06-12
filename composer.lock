@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "2ae1099b6ae946dabac8282b861c92e8",
+    "content-hash": "cd695487d22b066990bc7307db95dff3",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -822,16 +822,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.9.1",
+            "version": "dev-roman-pst-1791",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "d562cda021ed13482a296b9d022b469ad00732fe"
+                "reference": "3dfbb89dcc834cf9e6ef89abfb3d1ddcc9df217e"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/d562cda021ed13482a296b9d022b469ad00732fe",
-                "reference": "d562cda021ed13482a296b9d022b469ad00732fe",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/3dfbb89dcc834cf9e6ef89abfb3d1ddcc9df217e",
+                "reference": "3dfbb89dcc834cf9e6ef89abfb3d1ddcc9df217e",
                 "shasum": ""
             },
             "require": {
@@ -865,9 +865,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.9.1"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/roman-pst-1791"
             },
-            "time": "2024-06-11T06:26:45+00:00"
+            "time": "2024-06-12T10:40:00+00:00"
         },
         {
             "name": "keboola/php-component",
@@ -4505,12 +4505,14 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {
+        "keboola/kbc-project-restore": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^7.4"
     },
     "platform-dev": [],
-    "plugin-api-version": "2.3.0"
+    "plugin-api-version": "2.6.0"
 }
