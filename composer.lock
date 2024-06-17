@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "cd695487d22b066990bc7307db95dff3",
+    "content-hash": "679fc7ff129407bbdc1d552358c5488c",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -822,16 +822,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "dev-roman-pst-1791",
+            "version": "2.10.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "3dfbb89dcc834cf9e6ef89abfb3d1ddcc9df217e"
+                "reference": "65e461097541210227a31d3db16594f1524e4815"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/3dfbb89dcc834cf9e6ef89abfb3d1ddcc9df217e",
-                "reference": "3dfbb89dcc834cf9e6ef89abfb3d1ddcc9df217e",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/65e461097541210227a31d3db16594f1524e4815",
+                "reference": "65e461097541210227a31d3db16594f1524e4815",
                 "shasum": ""
             },
             "require": {
@@ -865,9 +865,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/roman-pst-1791"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.10.0"
             },
-            "time": "2024-06-12T10:40:00+00:00"
+            "time": "2024-06-17T09:06:09+00:00"
         },
         {
             "name": "keboola/php-component",
@@ -4505,9 +4505,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/kbc-project-restore": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
