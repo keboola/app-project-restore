@@ -75,8 +75,14 @@ class DryRunTest extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertStringContainsString('[dry-run] Restore project metadata', $output);
-        $this->assertRegExp('/\[dry-run\] Restore configuration [0-9]+ \(component "keboola.csv-import"\)/', $output);
-        $this->assertRegExp('/\[dry-run\] Restore state of configuration [0-9]+ \(component "keboola.csv-import"\)/', $output);
+        $this->assertRegExp(
+            '/\[dry-run\] Restore configuration [0-9]+ \(component "keboola.csv-import"\)/',
+            $output
+        );
+        $this->assertRegExp(
+            '/\[dry-run\] Restore state of configuration [0-9]+ \(component "keboola.csv-import"\)/',
+            $output
+        );
 
         $this->assertEmpty($errorOutput);
     }
