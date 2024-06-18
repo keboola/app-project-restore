@@ -52,6 +52,10 @@ class Application
 
         $restore = $this->storageBackend->getRestore($storageApi);
 
+        if ($this->config->isDryRun()) {
+            $restore->setDryRunMode();
+        }
+
         try {
             $restore->restoreProjectMetadata();
             $restore->restoreBuckets(!$params['useDefaultBackend']);

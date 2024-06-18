@@ -70,4 +70,9 @@ class Config extends BaseConfig
     {
         return $this->getValue(['parameters', 'restoreConfigs']);
     }
+
+    public function isDryRun(): bool
+    {
+        return $this->getValue(['parameters', 'dryRun']);
+    }
 }
