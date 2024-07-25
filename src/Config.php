@@ -71,6 +71,11 @@ class Config extends BaseConfig
         return $this->getValue(['parameters', 'restoreConfigs']);
     }
 
+    public function shouldRestorePermanentFiles(): bool
+    {
+        return $this->getValue(['parameters', 'restorePermanentFiles']);
+    }
+
     public function isDryRun(): bool
     {
         return $this->getValue(['parameters', 'dryRun']);

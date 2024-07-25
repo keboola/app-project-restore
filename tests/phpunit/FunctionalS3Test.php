@@ -84,6 +84,42 @@ class FunctionalS3Test extends TestCase
         $this->assertEmpty($errorOutput);
     }
 
+    public function testRestorePermanentFiles(): void
+    {
+        $this->createConfigFile('configurations', false, true);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertStringContainsString('Downloading buckets', $output);
+        $this->assertStringContainsString('Downloading tables', $output);
+        $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringContainsString('Downloading permanent files', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testRestorePermanentFilesDisabled(): void
+    {
+        $this->createConfigFile('configurations', false, false);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertStringContainsString('Downloading buckets', $output);
+        $this->assertStringContainsString('Downloading tables', $output);
+        $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringNotContainsString('Downloading permanent files', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
     public function testRestoreTables(): void
     {
         $this->createConfigFile('tables', true);
@@ -352,8 +388,11 @@ class FunctionalS3Test extends TestCase
         );
     }
 
-    private function createConfigFile(string $testCase, bool $restoreConfigs): \SplFileInfo
-    {
+    private function createConfigFile(
+        string $testCase,
+        bool $restoreConfigs,
+        bool $restorePermanentFiles = true
+    ): \SplFileInfo {
         $configFile = new \SplFileInfo($this->temp->getTmpFolder() . '/config.json');
 
         $fileSystem = new Filesystem();
@@ -373,6 +412,7 @@ class FunctionalS3Test extends TestCase
                         $this->generateFederationTokenForParams()
                     ),
                     'restoreConfigs' => $restoreConfigs,
+                    'restorePermanentFiles' => $restorePermanentFiles,
                 ],
 
             ])
