@@ -64,6 +64,9 @@ class Application
             }
             $restore->restoreTables();
             $restore->restoreTableAliases();
+            if ($this->config->shouldRestorePermanentFiles()) {
+                $restore->restorePermanentFiles();
+            }
         } catch (StorageApiException $e) {
             throw new UserException($e->getMessage(), 0, $e);
         }
