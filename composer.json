@@ -3,19 +3,21 @@
     "description": "Restore project to Keboola Connection",
     "license": "MIT",
     "require": {
-        "PHP": "^7.4",
-        "keboola/kbc-project-restore": "^2.14",
-        "keboola/php-component": "~4.1.1",
-        "keboola/php-file-storage-utils": "^0.2.2",
+        "php": "^8.2",
+        "keboola/kbc-project-restore": "dev-ondra-update-php",
+        "keboola/php-component": "^10.1",
+        "keboola/php-file-storage-utils": "^0.2.6",
         "microsoft/azure-storage-blob": "^1.5"
     },
     "require-dev": {
-        "keboola/coding-standard": "^9.0",
-        "keboola/php-temp": "^1.0",
-        "php-parallel-lint/php-parallel-lint": "^1.2",
-        "phpstan/phpstan": "^0.12.48",
-        "phpunit/phpunit": "^7.5",
-        "symfony/process": "^4.4"
+        "cweagans/composer-patches": "^1.7",
+        "keboola/coding-standard": "^15.0",
+        "keboola/php-temp": "^2.0",
+        "php-parallel-lint/php-parallel-lint": "^1.4",
+        "phpstan/phpstan": "^1.11",
+        "phpunit/phpunit": "^11.3",
+        "symfony/process": "^6.4",
+        "symplify/vendor-patches": "^11.3"
     },
     "autoload": {
         "psr-4": {
@@ -36,7 +38,6 @@
             "@tests-prepare-s3",
             "@tests-phpunit"
         ],
-
         "phpstan": "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon",
         "phpcs": "phpcs -n --ignore=vendor --extensions=php .",
         "phpcbf": "phpcbf -n --ignore=vendor --extensions=php .",
@@ -54,6 +55,17 @@
     },
     "config": {
         "sort-packages": true,
-        "optimize-autoloader": true
+        "optimize-autoloader": true,
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "cweagans/composer-patches": true
+        }
+    },
+    "extra": {
+        "patches": {
+            "microsoft/azure-storage-common": [
+                "patches/microsoft-azure-storage-common-src-common-internal-servicerestproxy-php.patch"
+            ]
+        }
     }
 }

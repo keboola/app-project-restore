@@ -32,7 +32,6 @@ class FunctionalAbsTest extends TestCase
         parent::setUp();
 
         $this->temp = new Temp('project-restore');
-        $this->temp->initRunFolder();
 
         $this->sapiClient = new StorageApi([
             'url' => getenv('TEST_STORAGE_API_URL'),
@@ -44,7 +43,7 @@ class FunctionalAbsTest extends TestCase
         $this->absClient = BlobRestProxy::createBlobService(sprintf(
             'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s;EndpointSuffix=core.windows.net',
             (string) getenv('TEST_AZURE_ACCOUNT_NAME'),
-            (string) getenv('TEST_AZURE_ACCOUNT_KEY')
+            (string) getenv('TEST_AZURE_ACCOUNT_KEY'),
         ));
 
         $this->testRunId = $this->sapiClient->generateRunId();
@@ -60,8 +59,8 @@ class FunctionalAbsTest extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertNotRegExp('/Restoring bucket /', $output);
-        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring bucket /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring table /', $output);
         $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
         $this->assertEmpty($errorOutput);
@@ -133,7 +132,7 @@ class FunctionalAbsTest extends TestCase
 
         $this->assertStringContainsString('Restoring bucket ', $output);
         $this->assertStringContainsString('Restoring table ', $output);
-        $this->assertNotRegExp('/Restoring [^\s]+ configurations/', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring [^\s]+ configurations/', $output);
 
         $this->assertEmpty($errorOutput);
     }
@@ -157,7 +156,7 @@ class FunctionalAbsTest extends TestCase
             $events,
             function (array $event) {
                 return $event['event'] === 'storage.tableCreated';
-            }
+            },
         ));
     }
 
@@ -171,8 +170,8 @@ class FunctionalAbsTest extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertNotRegExp('/Restoring bucket /', $output);
-        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring bucket /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring table /', $output);
         $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
         $this->assertStringContainsString('Skipping orchestrator configurations', $errorOutput);
@@ -190,8 +189,8 @@ class FunctionalAbsTest extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertNotRegExp('/Restoring bucket /', $output);
-        $this->assertNotRegExp('/Restoring table /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring bucket /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring table /', $output);
         $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
         $this->assertStringContainsString('You can transfer orchestrations with Orchestrator', $errorOutput);
@@ -211,8 +210,8 @@ class FunctionalAbsTest extends TestCase
             ->setName('Self configuration')
             ->setConfiguration(
                 json_decode(
-                    (string) file_get_contents($this->temp->getTmpFolder() . '/config.json')
-                )
+                    (string) file_get_contents($this->temp->getTmpFolder() . '/config.json'),
+                ),
             );
 
         $components->addConfiguration($configuration);
@@ -312,7 +311,7 @@ class FunctionalAbsTest extends TestCase
     {
         $sasHelper = new BlobSharedAccessSignatureHelper(
             (string) getenv('TEST_AZURE_ACCOUNT_NAME'),
-            (string) getenv('TEST_AZURE_ACCOUNT_KEY')
+            (string) getenv('TEST_AZURE_ACCOUNT_KEY'),
         );
 
         $expirationDate = (new DateTime())->modify('+1hour');
@@ -322,14 +321,14 @@ class FunctionalAbsTest extends TestCase
             (string) getenv('TEST_AZURE_CONTAINER_NAME') . '-' . $blobPrefix,
             'rl',
             $expirationDate,
-            new DateTime('now')
+            new DateTime('now'),
         );
 
         return sprintf(
             '%s=https://%s.blob.core.windows.net;SharedAccessSignature=%s',
             Resources::BLOB_ENDPOINT_NAME,
             getenv('TEST_AZURE_ACCOUNT_NAME'),
-            $sasToken
+            $sasToken,
         );
     }
 
@@ -348,14 +347,14 @@ class FunctionalAbsTest extends TestCase
                 'KBC_RUNID' => $this->testRunId,
             ],
             null,
-            120.0
+            120.0,
         );
     }
 
     private function createConfigFile(
         string $blobPrefix,
         bool $restoreConfigs,
-        bool $restorePermanentFiles = true
+        bool $restorePermanentFiles = true,
     ): void {
         $configFile = new SplFileInfo($this->temp->getTmpFolder() . '/config.json');
 
@@ -371,8 +370,7 @@ class FunctionalAbsTest extends TestCase
                     'restoreConfigs' => $restoreConfigs,
                     'restorePermanentFiles' => $restorePermanentFiles,
                 ],
-
-            ])
+            ]),
         );
     }
 }

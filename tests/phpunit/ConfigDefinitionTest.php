@@ -4,16 +4,15 @@ declare(strict_types=1);
 
 namespace Keboola\App\ProjectRestore\Tests;
 
-use PHPUnit\Framework\TestCase;
 use Keboola\App\ProjectRestore\ConfigDefinition;
+use PHPUnit\Framework\Attributes\DataProvider;
+use PHPUnit\Framework\TestCase;
 use Symfony\Component\Config\Definition\Exception\InvalidConfigurationException;
 use Symfony\Component\Config\Definition\Processor;
 
 class ConfigDefinitionTest extends TestCase
 {
-    /**
-     * @dataProvider provideValidConfigs
-     */
+    #[DataProvider('provideValidConfigs')]
     public function testValidConfigDefinition(array $inputConfig, array $expectedConfig): void
     {
         $definition = new ConfigDefinition();
@@ -23,9 +22,9 @@ class ConfigDefinitionTest extends TestCase
     }
 
     /**
-     * @return mixed[][]
+     * @return array[]
      */
-    public function provideValidConfigs(): array
+    public static function provideValidConfigs(): array
     {
         return [
             'config s3' => [
@@ -81,12 +80,13 @@ class ConfigDefinitionTest extends TestCase
     }
 
     /**
-     * @dataProvider provideInvalidConfigs
+     * @param class-string<InvalidConfigurationException> $expectedExceptionClass
      */
+    #[DataProvider('provideInvalidConfigs')]
     public function testInvalidConfigDefinition(
         array $inputConfig,
         string $expectedExceptionClass,
-        string $expectedExceptionMessage
+        string $expectedExceptionMessage,
     ): void {
         $definition = new ConfigDefinition();
         $processor = new Processor();
@@ -96,9 +96,9 @@ class ConfigDefinitionTest extends TestCase
     }
 
     /**
-     * @return mixed[][]
+     * @return array[]
      */
-    public function provideInvalidConfigs(): array
+    public static function provideInvalidConfigs(): array
     {
         return [
             'empty parameters' => [
@@ -126,7 +126,7 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
                 InvalidConfigurationException::class,
-                'The child node "accessKeyId" at path "root.parameters.s3" must be configured.',
+                'The child config "accessKeyId" under "root.parameters.s3" must be configured.',
             ],
             'missing secretAccessKey' => [
                 [
@@ -138,7 +138,7 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
                 InvalidConfigurationException::class,
-                'The child node "#secretAccessKey" at path "root.parameters.s3" must be configured.',
+                'The child config "#secretAccessKey" under "root.parameters.s3" must be configured.',
             ],
             'missing sessionToken' => [
                 [
@@ -151,7 +151,7 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
                 InvalidConfigurationException::class,
-                'The child node "#sessionToken" at path "root.parameters.s3" must be configured.',
+                'The child config "#sessionToken" under "root.parameters.s3" must be configured.',
             ],
             'bad value for default backend' => [
                 [
@@ -165,7 +165,7 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
                 InvalidConfigurationException::class,
-                'Invalid type for path "root.parameters.useDefaultBackend". Expected boolean, but got string.',
+                'Invalid type for path "root.parameters.useDefaultBackend". Expected "bool", but got "string".',
             ],
             'missing container' => [
                 [
@@ -176,7 +176,7 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
                 InvalidConfigurationException::class,
-                'The child node "container" at path "root.parameters.abs" must be configured.',
+                'The child config "container" under "root.parameters.abs" must be configured.',
             ],
             'missing connectionString' => [
                 [
@@ -187,7 +187,7 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
                 InvalidConfigurationException::class,
-                'The child node "#connectionString" at path "root.parameters.abs" must be configured.',
+                'The child config "#connectionString" under "root.parameters.abs" must be configured.',
             ],
         ];
     }

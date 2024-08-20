@@ -76,14 +76,14 @@ class Application
         // notify orchestrations
         if (count($restore->listConfigsInBackup('orchestrator'))) {
             $this->logger->warning(
-                'Orchestrations was not restored. You can transfer orchestrations with Orchestrator Migrate App'
+                'Orchestrations was not restored. You can transfer orchestrations with Orchestrator Migrate App',
             );
         }
 
         // notify gooddata writers
         if (count($restore->listConfigsInBackup('gooddata-writer'))) {
             $this->logger->warning(
-                'GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App'
+                'GoodData writers was not restored. You can transfer writers with GoodData Writer Migrate App',
             );
         }
 
@@ -92,7 +92,7 @@ class Application
             || count($restore->listConfigsInBackup('keboola.wr-snowflake-blob-storage'))
         ) {
             $this->logger->warning(
-                'Snowflake writers was not restored. You can transfer writers with Snowflake Writer Migrate App'
+                'Snowflake writers was not restored. You can transfer writers with Snowflake Writer Migrate App',
             );
         }
     }
@@ -110,8 +110,6 @@ class Application
 
     /**
      * Check if project is empty without buckets and configurations
-     *
-     * @param StorageApi $storageApi
      * @throws UserException
      */
     private function validateProject(StorageApi $storageApi): void
@@ -120,7 +118,7 @@ class Application
             function ($bucket) {
                 return $bucket['id'];
             },
-            $storageApi->listBuckets()
+            $storageApi->listBuckets(),
         );
 
         if (count($bucketIds) > 0) {

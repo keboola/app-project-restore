@@ -42,8 +42,8 @@ class AwsS3Storage implements IStorage
                 throw new InvalidArgumentException(
                     sprintf(
                         'Missing region info in uri: %s',
-                        $config->getAwsBackupUri()
-                    )
+                        $config->getAwsBackupUri(),
+                    ),
                 );
             }
 
@@ -62,7 +62,7 @@ class AwsS3Storage implements IStorage
             $this->initS3(),
             $this->bucket,
             $this->path,
-            $this->logger
+            $this->logger,
         );
     }
 

@@ -2,6 +2,9 @@
 
 declare(strict_types=1);
 
+use Aws\S3\S3Client;
+use Aws\S3\Transfer;
+
 date_default_timezone_set('Europe/Prague');
 ini_set('display_errors', '1');
 error_reporting(E_ALL);
@@ -11,7 +14,7 @@ $basedir = dirname(__FILE__);
 require_once $basedir . '/bootstrap.php';
 
 echo "Loading fixtures to S3\n";
-$s3Client = new \Aws\S3\S3Client([
+$s3Client = new S3Client([
     'version' => 'latest',
     'region' => getenv('TEST_AWS_REGION'),
     'credentials' => [
@@ -30,7 +33,7 @@ if (isset($result['Contents'])) {
             [
                 'Bucket' => getenv('TEST_AWS_S3_BUCKET'),
                 'Delete' => ['Objects' => $result['Contents']],
-            ]
+            ],
         );
     }
 }
@@ -39,7 +42,7 @@ if (isset($result['Contents'])) {
 $result = $s3Client->listObjects(['Bucket' => getenv('TEST_AWS_S3_BUCKET')])->toArray();
 if (isset($result['Contents'])) {
     if (count($result['Contents']) > 0) {
-        throw new \Exception('AWS S3 bucket is not empty');
+        throw new Exception('AWS S3 bucket is not empty');
     }
 }
 
@@ -51,7 +54,7 @@ $dest = 's3://' . getenv('TEST_AWS_S3_BUCKET') . '/';
 
 // Create a transfer object.
 echo "Updating fixtures in S3\n";
-$manager = new \Aws\S3\Transfer($s3Client, $source, $dest, []);
+$manager = new Transfer($s3Client, $source, $dest, []);
 
 // Perform the transfer synchronously.
 $manager->transfer();

@@ -28,32 +28,32 @@ class Config extends BaseConfig
 
     public function getAwsBackupUri(): string
     {
-        return $this->getValue(['parameters', 's3', 'backupUri']);
+        return $this->getStringValue(['parameters', 's3', 'backupUri']);
     }
 
     public function getAwsAccessKeyId(): string
     {
-        return $this->getValue(['parameters', 's3', 'accessKeyId']);
+        return $this->getStringValue(['parameters', 's3', 'accessKeyId']);
     }
 
     public function getAwsSecretAccessKey(): string
     {
-        return $this->getValue(['parameters', 's3', '#secretAccessKey']);
+        return $this->getStringValue(['parameters', 's3', '#secretAccessKey']);
     }
 
     public function getAwsSessionToken(): string
     {
-        return $this->getValue(['parameters', 's3', '#sessionToken']);
+        return $this->getStringValue(['parameters', 's3', '#sessionToken']);
     }
 
     public function getAbsConnectionString(): string
     {
-        return $this->getValue(['parameters', 'abs', '#connectionString']);
+        return $this->getStringValue(['parameters', 'abs', '#connectionString']);
     }
 
     public function getAbsContainer(): string
     {
-        return $this->getValue(['parameters', 'abs', 'container']);
+        return $this->getStringValue(['parameters', 'abs', 'container']);
     }
 
     public function getKbcUrl(): string
@@ -68,16 +68,22 @@ class Config extends BaseConfig
 
     public function shouldRestoreConfigs(): bool
     {
-        return $this->getValue(['parameters', 'restoreConfigs']);
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'restoreConfigs']);
+        return $value;
     }
 
     public function shouldRestorePermanentFiles(): bool
     {
-        return $this->getValue(['parameters', 'restorePermanentFiles']);
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'restorePermanentFiles']);
+        return $value;
     }
 
     public function isDryRun(): bool
     {
-        return $this->getValue(['parameters', 'dryRun']);
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'dryRun']);
+        return $value;
     }
 }

@@ -11,6 +11,7 @@ use Keboola\StorageApi\Components;
 use Keboola\StorageApi\Options\Components\Configuration;
 use Keboola\Temp\Temp;
 use PHPUnit\Framework\TestCase;
+use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
 use Symfony\Component\Process\Process;
 
@@ -29,7 +30,6 @@ class FunctionalS3Test extends TestCase
         parent::setUp();
 
         $this->temp = new Temp('project-restore');
-        $this->temp->initRunFolder();
 
         $this->sapiClient = new StorageApi([
             'url' => getenv('TEST_STORAGE_API_URL'),
@@ -59,9 +59,9 @@ class FunctionalS3Test extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertNotRegExp('/Restoring bucket /', $output);
-        $this->assertNotRegExp('/Restoring table /', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring bucket /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring table /', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
         $this->assertEmpty($errorOutput);
     }
@@ -130,9 +130,9 @@ class FunctionalS3Test extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertContains('Restoring bucket ', $output);
-        $this->assertContains('Restoring table ', $output);
-        $this->assertNotRegExp('/Restoring [^\s]+ configurations/', $output);
+        $this->assertStringContainsString('Restoring bucket ', $output);
+        $this->assertStringContainsString('Restoring table ', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring [^\s]+ configurations/', $output);
 
         $this->assertEmpty($errorOutput);
     }
@@ -156,7 +156,7 @@ class FunctionalS3Test extends TestCase
             $events,
             function (array $event) {
                 return $event['event'] === 'storage.tableCreated';
-            }
+            },
         ));
     }
 
@@ -170,13 +170,13 @@ class FunctionalS3Test extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertNotRegExp('/Restoring bucket /', $output);
-        $this->assertNotRegExp('/Restoring table /', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring bucket /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring table /', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
-        $this->assertContains('Skipping orchestrator configurations', $errorOutput);
-        $this->assertContains('Skipping gooddata-writer configurations', $errorOutput);
-        $this->assertContains('Skipping keboola.wr-db-snowflake configurations', $errorOutput);
+        $this->assertStringContainsString('Skipping orchestrator configurations', $errorOutput);
+        $this->assertStringContainsString('Skipping gooddata-writer configurations', $errorOutput);
+        $this->assertStringContainsString('Skipping keboola.wr-db-snowflake configurations', $errorOutput);
     }
 
     public function testRestoreConfigsAppNotify(): void
@@ -189,13 +189,13 @@ class FunctionalS3Test extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertNotRegExp('/Restoring bucket /', $output);
-        $this->assertNotRegExp('/Restoring table /', $output);
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring bucket /', $output);
+        $this->assertDoesNotMatchRegularExpression('/Restoring table /', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
-        $this->assertContains('You can transfer orchestrations with Orchestrator', $errorOutput);
-        $this->assertContains('You can transfer writers with GoodData', $errorOutput);
-        $this->assertContains('You can transfer writers with Snowflake', $errorOutput);
+        $this->assertStringContainsString('You can transfer orchestrations with Orchestrator', $errorOutput);
+        $this->assertStringContainsString('You can transfer writers with GoodData', $errorOutput);
+        $this->assertStringContainsString('You can transfer writers with Snowflake', $errorOutput);
     }
 
     public function testIgnoreSelfConfig(): void
@@ -210,8 +210,8 @@ class FunctionalS3Test extends TestCase
             ->setName('Self configuration')
             ->setConfiguration(
                 json_decode(
-                    (string) file_get_contents($this->temp->getTmpFolder() . '/config.json')
-                )
+                    (string) file_get_contents($this->temp->getTmpFolder() . '/config.json'),
+                ),
             );
 
         $components->addConfiguration($configuration);
@@ -222,7 +222,7 @@ class FunctionalS3Test extends TestCase
         $output = $runProcess->getOutput();
         $errorOutput = $runProcess->getErrorOutput();
 
-        $this->assertContains('Restoring keboola.csv-import configurations', $output);
+        $this->assertStringContainsString('Restoring keboola.csv-import configurations', $output);
 
         $this->assertEmpty($errorOutput);
     }
@@ -240,8 +240,8 @@ class FunctionalS3Test extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Storage is not empty', $errorOutput);
-        $this->assertContains($bucketId, $errorOutput);
+        $this->assertStringContainsString('Storage is not empty', $errorOutput);
+        $this->assertStringContainsString($bucketId, $errorOutput);
 
         $this->assertEmpty($output);
     }
@@ -266,7 +266,7 @@ class FunctionalS3Test extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains('Delete all existing component configurations', $errorOutput);
+        $this->assertStringContainsString('Delete all existing component configurations', $errorOutput);
 
         $this->assertEmpty($output);
     }
@@ -282,20 +282,20 @@ class FunctionalS3Test extends TestCase
                         [
                             'backupUri' => sprintf(
                                 'https://%s.i-dont-know.com',
-                                getenv('TEST_AWS_S3_BUCKET')
+                                getenv('TEST_AWS_S3_BUCKET'),
                             ),
                         ],
-                        $this->generateFederationTokenForParams()
+                        $this->generateFederationTokenForParams(),
                     ),
                 ],
-            ])
+            ]),
         );
 
         $runProcess = $this->createTestProcess();
         $runProcess->run();
 
         $this->assertEquals(1, $runProcess->getExitCode());
-        $this->assertContains(' Missing region info', $runProcess->getErrorOutput());
+        $this->assertStringContainsString(' Missing region info', $runProcess->getErrorOutput());
     }
 
     private function cleanupKbcProject(): void
@@ -356,6 +356,7 @@ class FunctionalS3Test extends TestCase
             ],
         ];
 
+        /** @var array $federationToken */
         $federationToken = $sts->getFederationToken([
             'DurationSeconds' => 3600,
             'Name' => 'GetProjectRestoreFile',
@@ -384,16 +385,16 @@ class FunctionalS3Test extends TestCase
                 'KBC_RUNID' => $this->testRunId,
             ],
             null,
-            120.0
+            120.0,
         );
     }
 
     private function createConfigFile(
         string $testCase,
         bool $restoreConfigs,
-        bool $restorePermanentFiles = true
-    ): \SplFileInfo {
-        $configFile = new \SplFileInfo($this->temp->getTmpFolder() . '/config.json');
+        bool $restorePermanentFiles = true,
+    ): SplFileInfo {
+        $configFile = new SplFileInfo($this->temp->getTmpFolder() . '/config.json');
 
         $fileSystem = new Filesystem();
         $fileSystem->dumpFile(
@@ -406,16 +407,15 @@ class FunctionalS3Test extends TestCase
                                 'https://%s.s3.%s.amazonaws.com/%s/',
                                 getenv('TEST_AWS_S3_BUCKET'),
                                 getenv('TEST_AWS_REGION'),
-                                $testCase
+                                $testCase,
                             ),
                         ],
-                        $this->generateFederationTokenForParams()
+                        $this->generateFederationTokenForParams(),
                     ),
                     'restoreConfigs' => $restoreConfigs,
                     'restorePermanentFiles' => $restorePermanentFiles,
                 ],
-
-            ])
+            ]),
         );
 
         return $configFile;
