@@ -822,16 +822,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.12.0",
+            "version": "2.12.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "75db8ac7f11cc7383b3374e31d77e614dbb79e3f"
+                "reference": "5dd44b8f05653bc589dfc130af25ebdd0ce64b1b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/75db8ac7f11cc7383b3374e31d77e614dbb79e3f",
-                "reference": "75db8ac7f11cc7383b3374e31d77e614dbb79e3f",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/5dd44b8f05653bc589dfc130af25ebdd0ce64b1b",
+                "reference": "5dd44b8f05653bc589dfc130af25ebdd0ce64b1b",
                 "shasum": ""
             },
             "require": {
@@ -865,9 +865,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.12.0"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.12.1"
             },
-            "time": "2024-08-19T14:11:48+00:00"
+            "time": "2024-08-31T19:58:09+00:00"
         },
         {
             "name": "keboola/php-component",
