@@ -34,15 +34,15 @@ class AzureBlobStorage implements IStorage
         $absClient->pushMiddleware(
             RetryMiddlewareFactory::create(
                 RetryMiddlewareFactory::GENERAL_RETRY_TYPE,
-                self::MAX_RETRIES
-            )
+                self::MAX_RETRIES,
+            ),
         );
 
         return new AbsRestore(
             $sapi,
             $absClient,
             $this->config->getAbsContainer(),
-            $this->logger
+            $this->logger,
         );
     }
 }

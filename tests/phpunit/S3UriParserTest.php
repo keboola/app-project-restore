@@ -22,7 +22,7 @@ class S3UriParserTest extends TestCase
             'https://%s.s3.%s.amazonaws.com/%s',
             self::TEST_S3_BUCKET,
             $region,
-            self::TEST_S3_PATH
+            self::TEST_S3_PATH,
         );
 
         $parts = (new BaseS3UriParser())->parse($uri);
@@ -41,7 +41,7 @@ class S3UriParserTest extends TestCase
         $uri = sprintf(
             'https://%s.s3.amazonaws.com/%s',
             self::TEST_S3_BUCKET,
-            self::TEST_S3_PATH
+            self::TEST_S3_PATH,
         );
 
         $parts = (new BaseS3UriParser())->parse($uri);

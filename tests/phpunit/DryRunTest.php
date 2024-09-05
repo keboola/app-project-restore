@@ -31,7 +31,6 @@ class DryRunTest extends TestCase
         parent::setUp();
 
         $this->temp = new Temp('project-restore');
-        $this->temp->initRunFolder();
 
         $this->sapiClient = new StorageApi([
             'url' => getenv('TEST_STORAGE_API_URL'),
@@ -43,7 +42,7 @@ class DryRunTest extends TestCase
         $this->absClient = BlobRestProxy::createBlobService(sprintf(
             'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s;EndpointSuffix=core.windows.net',
             getenv('TEST_AZURE_ACCOUNT_NAME'),
-            getenv('TEST_AZURE_ACCOUNT_KEY')
+            getenv('TEST_AZURE_ACCOUNT_KEY'),
         ));
 
         $this->testRunId = $this->sapiClient->generateRunId();
@@ -65,7 +64,7 @@ class DryRunTest extends TestCase
                     'restoreConfigs' => true,
                     'dryRun' => true,
                 ],
-            ])
+            ]),
         );
 
         $runProcess = $this->createTestProcess();
@@ -75,13 +74,13 @@ class DryRunTest extends TestCase
         $errorOutput = $runProcess->getErrorOutput();
 
         $this->assertStringContainsString('[dry-run] Restore project metadata', $output);
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/\[dry-run\] Restore configuration [0-9]+ \(component "keboola.csv-import"\)/',
-            $output
+            $output,
         );
-        $this->assertRegExp(
+        $this->assertMatchesRegularExpression(
             '/\[dry-run\] Restore state of configuration [0-9]+ \(component "keboola.csv-import"\)/',
-            $output
+            $output,
         );
 
         $this->assertEmpty($errorOutput);
@@ -127,7 +126,7 @@ class DryRunTest extends TestCase
     {
         $sasHelper = new BlobSharedAccessSignatureHelper(
             (string) getenv('TEST_AZURE_ACCOUNT_NAME'),
-            (string) getenv('TEST_AZURE_ACCOUNT_KEY')
+            (string) getenv('TEST_AZURE_ACCOUNT_KEY'),
         );
 
         $expirationDate = (new DateTime())->modify('+1hour');
@@ -137,14 +136,14 @@ class DryRunTest extends TestCase
             getenv('TEST_AZURE_CONTAINER_NAME') . '-' . $blobPrefix,
             'rl',
             $expirationDate,
-            new DateTime('now')
+            new DateTime('now'),
         );
 
         return sprintf(
             '%s=https://%s.blob.core.windows.net;SharedAccessSignature=%s',
             Resources::BLOB_ENDPOINT_NAME,
             getenv('TEST_AZURE_ACCOUNT_NAME'),
-            $sasToken
+            $sasToken,
         );
     }
 
@@ -163,7 +162,7 @@ class DryRunTest extends TestCase
                 'KBC_RUNID' => $this->testRunId,
             ],
             null,
-            120.0
+            120.0,
         );
     }
 }

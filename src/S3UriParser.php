@@ -5,12 +5,13 @@ declare(strict_types=1);
 namespace Keboola\App\ProjectRestore;
 
 use Aws\S3\S3UriParser as BaseS3UriParser;
+use Psr\Http\Message\UriInterface;
 
 class S3UriParser extends BaseS3UriParser
 {
     /**
-     * @param \Psr\Http\Message\UriInterface|string $uri
-     * @return array
+     * @param string|UriInterface $uri
+     * @phpcs:disable SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingNativeTypeHint
      */
     public function parse($uri): array
     {

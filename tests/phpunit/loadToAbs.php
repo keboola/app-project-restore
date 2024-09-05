@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use MicrosoftAzure\Storage\Blob\BlobRestProxy;
 use MicrosoftAzure\Storage\Blob\Models\Container;
+use MicrosoftAzure\Storage\Blob\Models\ListBlobsOptions;
 use Symfony\Component\Finder\Finder;
 
 date_default_timezone_set('Europe/Prague');
@@ -19,7 +20,7 @@ echo 'Loading fixtures to ABS' . PHP_EOL;
 $absClient = BlobRestProxy::createBlobService(sprintf(
     'DefaultEndpointsProtocol=https;AccountName=%s;AccountKey=%s;EndpointSuffix=core.windows.net',
     (string) getenv('TEST_AZURE_ACCOUNT_NAME'),
-    (string) getenv('TEST_AZURE_ACCOUNT_KEY')
+    (string) getenv('TEST_AZURE_ACCOUNT_KEY'),
 ));
 
 echo 'Cleanup files in ABS' . PHP_EOL;
@@ -36,7 +37,9 @@ foreach ($dirs as $dir) {
         $absClient->createContainer($container);
     }
 
-    $blobs = $absClient->listBlobs($container);
+    $options = new ListBlobsOptions();
+    $options->setPrefix('');
+    $blobs = $absClient->listBlobs($container, $options);
     foreach ($blobs->getBlobs() as $blob) {
         $absClient->deleteBlob($container, $blob->getName());
     }
@@ -51,7 +54,7 @@ foreach ($dirs as $dir) {
         $absClient->createBlockBlob(
             $container,
             $file->getRelativePathname(),
-            $fopen
+            $fopen,
         );
     }
 }
