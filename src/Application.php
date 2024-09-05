@@ -64,6 +64,8 @@ class Application
             }
             $restore->restoreTables();
             $restore->restoreTableAliases();
+            $restore->restoreTriggers();
+            $restore->restoreNotifications();
             if ($this->config->shouldRestorePermanentFiles()) {
                 $restore->restorePermanentFiles();
             }
