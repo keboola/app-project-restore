@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "95a40646bfc0bba7803865cc2ad26381",
+    "content-hash": "5a7c16b5d20152df67cf1daa4d58decc",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1216,16 +1216,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "dev-PST-2022-ondra-fix",
+            "version": "2.15.1",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "685134bef072849d0bd29632fd58b39bada38612"
+                "reference": "135f0dc9c41799f68dad58fcd64b34b278c22225"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/685134bef072849d0bd29632fd58b39bada38612",
-                "reference": "685134bef072849d0bd29632fd58b39bada38612",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/135f0dc9c41799f68dad58fcd64b34b278c22225",
+                "reference": "135f0dc9c41799f68dad58fcd64b34b278c22225",
                 "shasum": ""
             },
             "require": {
@@ -1263,9 +1263,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/PST-2022-ondra-fix"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.15.1"
             },
-            "time": "2024-09-05T20:39:55+00:00"
+            "time": "2024-09-06T07:29:13+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6015,9 +6015,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/kbc-project-restore": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
