@@ -6,6 +6,7 @@ namespace Keboola\App\ProjectRestore;
 
 use Keboola\App\ProjectRestore\Storages\AwsS3Storage;
 use Keboola\App\ProjectRestore\Storages\AzureBlobStorage;
+use Keboola\App\ProjectRestore\Storages\GoogleStorage;
 use Keboola\App\ProjectRestore\Storages\IStorage;
 use Keboola\Component\UserException;
 use Keboola\StorageApi\Client as StorageApi;
@@ -39,6 +40,9 @@ class Application
                 break;
             case Config::STORAGE_BACKEND_ABS:
                 $this->storageBackend = new AzureBlobStorage($config, $logger);
+                break;
+            case Config::STORAGE_BACKEND_GCS:
+                $this->storageBackend = new GoogleStorage($config, $logger);
                 break;
         }
     }

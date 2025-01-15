@@ -7,7 +7,9 @@ services:
       - ./data:/data
     environment:
       - TEST_STORAGE_API_URL
+      - KBC_URL
       - TEST_STORAGE_API_TOKEN
+      - KBC_TOKEN
       - TEST_COMPONENT_ID
       - TEST_AWS_ACCESS_KEY_ID
       - TEST_AWS_SECRET_ACCESS_KEY
