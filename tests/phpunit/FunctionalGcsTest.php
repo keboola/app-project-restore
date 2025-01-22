@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace Keboola\App\ProjectRestore\Tests;
 
-use DateTime;
 use Google\Auth\Credentials\ServiceAccountCredentials;
 use Google\Auth\HttpHandler\HttpHandlerFactory;
 use Google\Cloud\Storage\StorageClient;
@@ -15,9 +14,6 @@ use Keboola\StorageApi\Client as StorageApi;
 use Keboola\StorageApi\Components;
 use Keboola\StorageApi\Options\Components\Configuration;
 use Keboola\Temp\Temp;
-use MicrosoftAzure\Storage\Blob\BlobRestProxy;
-use MicrosoftAzure\Storage\Blob\BlobSharedAccessSignatureHelper;
-use MicrosoftAzure\Storage\Common\Internal\Resources;
 use PHPUnit\Framework\TestCase;
 use SplFileInfo;
 use Symfony\Component\Filesystem\Filesystem;
