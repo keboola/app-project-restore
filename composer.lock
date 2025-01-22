@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "52114b6e0b74d843eada089116248f66",
+    "content-hash": "23178a12c4725ac82c728e2fd341fcff",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1329,16 +1329,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "dev-PST-2375-ondra",
+            "version": "2.19.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "1195f6a271ee4f7e9be676fde9e415da9e153d4f"
+                "reference": "4f608c4a6c3248d051dfb32ac9fbb15eece7cd72"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/1195f6a271ee4f7e9be676fde9e415da9e153d4f",
-                "reference": "1195f6a271ee4f7e9be676fde9e415da9e153d4f",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/4f608c4a6c3248d051dfb32ac9fbb15eece7cd72",
+                "reference": "4f608c4a6c3248d051dfb32ac9fbb15eece7cd72",
                 "shasum": ""
             },
             "require": {
@@ -1376,9 +1376,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/PST-2375-ondra"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.19.0"
             },
-            "time": "2025-01-15T20:45:34+00:00"
+            "time": "2025-01-22T13:05:53+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6355,9 +6355,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/kbc-project-restore": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
