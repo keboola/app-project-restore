@@ -22,6 +22,10 @@ env:
   TEST_AZURE_ACCOUNT_KEY: "${{ secrets.TEST_AZURE_ACCOUNT_KEY }}"
   TEST_AZURE_CONTAINER_NAME: "test-app-restore-project"
 
+  # GCP Credentials
+  TEST_GCP_SERVICE_ACCOUNT: "${{ secrets.TEST_GCP_SERVICE_ACCOUNT }}"
+  TEST_GCP_BUCKET: "ci-app-project-restore"
+
   # KBC Credentials
   # https://connection.keboola.com/admin/projects/9019/dashboard
   TEST_STORAGE_API_URL: "https://connection.keboola.com/"
@@ -104,6 +108,8 @@ jobs:
           -e TEST_AZURE_ACCOUNT_NAME
           -e TEST_AZURE_ACCOUNT_KEY
           -e TEST_AZURE_CONTAINER_NAME
+          -e TEST_GCP_SERVICE_ACCOUNT
+          -e TEST_GCP_BUCKET
           ${{env.APP_IMAGE}} composer ci
 
   deploy:
