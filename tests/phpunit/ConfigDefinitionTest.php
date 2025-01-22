@@ -106,7 +106,7 @@ class ConfigDefinitionTest extends TestCase
                     'parameters' => [],
                 ],
                 InvalidConfigurationException::class,
-                'ABS or S3 must be configured.',
+                'Only one of ABS, S3, or GCS needs to be configured.',
             ],
             'extra parameters' => [
                 [
@@ -188,6 +188,34 @@ class ConfigDefinitionTest extends TestCase
                 ],
                 InvalidConfigurationException::class,
                 'The child config "#connectionString" under "root.parameters.abs" must be configured.',
+            ],
+            'setup all storages' => [
+                [
+                    'parameters' => [
+                        'abs' => [
+                            'container' => 'test-container',
+                            '#connectionString' => 'secret',
+                        ],
+                        's3' => [
+                            'backupUri' => 'uri',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'gcs' => [
+                            'backupUri' => 'uri',
+                            'bucket' => 'test-bucket',
+                            'projectId' => 'test-project',
+                            'credentials' => [
+                                'accessToken' => 'test-token',
+                                'expiresIn' => '1',
+                                'tokenType' => 'Bearer',
+                            ],
+                        ],
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'Only one of ABS, S3, or GCS needs to be configured.',
             ],
         ];
     }

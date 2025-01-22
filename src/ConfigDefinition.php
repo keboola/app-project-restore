@@ -18,8 +18,8 @@ class ConfigDefinition extends BaseConfigDefinition
         $parametersNode
             ->validate()
                 ->always(function ($v) {
-                    if (!empty($v['abs']) && !empty($v['s3']) && !empty($v['gcs'])) {
-                        throw new InvalidConfigurationException('GCS, ABS and S3 cannot be set together.');
+                    if (count(array_filter(array_map(fn($s) => !empty($v[$s]), ['abs', 's3', 'gcs']))) !== 1) {
+                        throw new InvalidConfigurationException('Only one of ABS, S3, or GCS needs to be configured.');
                     }
                     if (empty($v['abs']) && empty($v['s3']) && empty($v['gcs'])) {
                         throw new InvalidConfigurationException('GCS, ABS or S3 must be configured.');
