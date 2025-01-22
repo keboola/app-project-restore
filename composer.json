@@ -34,9 +34,11 @@
         "tests-phpunit": "phpunit",
         "tests-prepare-s3": "php ./tests/phpunit/loadToS3.php",
         "tests-prepare-abs": "php ./tests/phpunit/loadToAbs.php",
+        "tests-prepare-gcs": "php ./tests/phpunit/loadToGcs.php",
         "tests": [
             "@tests-prepare-abs",
             "@tests-prepare-s3",
+            "@tests-prepare-gcs",
             "@tests-phpunit"
         ],
         "phpstan": "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon",
