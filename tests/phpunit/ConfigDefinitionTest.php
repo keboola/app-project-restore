@@ -80,6 +80,43 @@ class ConfigDefinitionTest extends TestCase
                     ],
                 ],
             ],
+            'config gcs' => [
+                [
+                    'parameters' => [
+                        'gcs' => [
+                            'backupUri' => 'https://project-restore.storage.googleapis.com/some-path',
+                            'bucket' => 'test-bucket',
+                            'projectId' => 'test-project',
+                            'credentials' => [
+                                '#accessToken' => 'test-token',
+                                'expiresIn' => '1',
+                                'tokenType' => 'Bearer',
+                            ],
+                        ],
+                        'restoreConfigs' => false,
+                    ],
+                ],
+                [
+                    'parameters' => [
+                        'gcs' => [
+                            'backupUri' => 'https://project-restore.storage.googleapis.com/some-path',
+                            'bucket' => 'test-bucket',
+                            'projectId' => 'test-project',
+                            'credentials' => [
+                                '#accessToken' => 'test-token',
+                                'expiresIn' => '1',
+                                'tokenType' => 'Bearer',
+                            ],
+                        ],
+                        'restoreConfigs' => false,
+                        'useDefaultBackend' => false,
+                        'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
+                        'dryRun' => false,
+                    ],
+                ],
+            ],
         ];
     }
 
