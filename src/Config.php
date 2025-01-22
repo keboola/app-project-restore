@@ -13,6 +13,8 @@ class Config extends BaseConfig
 
     public const STORAGE_BACKEND_ABS = 'abs';
 
+    public const STORAGE_BACKEND_GCS = 'gcs';
+
     public function getStorageBackendType(): string
     {
         if ($this->getValue(['parameters', 'abs'], false)) {
@@ -23,7 +25,31 @@ class Config extends BaseConfig
             return self::STORAGE_BACKEND_S3;
         }
 
+        if ($this->getValue(['parameters', 'gcs'], false)) {
+            return self::STORAGE_BACKEND_GCS;
+        }
+
         throw new UserException('Unknown storage backend type.');
+    }
+
+    public function getGcsBackupUri(): string
+    {
+        return $this->getStringValue(['parameters', 'gcs', 'backupUri']);
+    }
+
+    public function getGcsBucket(): string
+    {
+        return $this->getStringValue(['parameters', 'gcs', 'bucket']);
+    }
+
+    public function getGcsCredentials(): array
+    {
+        return $this->getArrayValue(['parameters', 'gcs', 'credentials']);
+    }
+
+    public function getGcsProjectId(): string
+    {
+        return $this->getStringValue(['parameters', 'gcs', 'projectId']);
     }
 
     public function getAwsBackupUri(): string

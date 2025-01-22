@@ -6,6 +6,7 @@ namespace Keboola\App\ProjectRestore;
 
 use Keboola\App\ProjectRestore\Storages\AwsS3Storage;
 use Keboola\App\ProjectRestore\Storages\AzureBlobStorage;
+use Keboola\App\ProjectRestore\Storages\GoogleStorage;
 use Keboola\App\ProjectRestore\Storages\IStorage;
 use Keboola\Component\UserException;
 use Keboola\StorageApi\Client as StorageApi;
@@ -26,6 +27,8 @@ class Application
         'gooddata-writer',
         'keboola.wr-db-snowflake',
         'keboola.wr-snowflake-blob-storage',
+        'keboola.wr-db-snowflake-gcs',
+        'keboola.wr-db-snowflake-gcs-s3',
     ];
 
     public function __construct(Config $config, LoggerInterface $logger)
@@ -39,6 +42,9 @@ class Application
                 break;
             case Config::STORAGE_BACKEND_ABS:
                 $this->storageBackend = new AzureBlobStorage($config, $logger);
+                break;
+            case Config::STORAGE_BACKEND_GCS:
+                $this->storageBackend = new GoogleStorage($config, $logger);
                 break;
         }
     }
@@ -90,6 +96,8 @@ class Application
         // notify snowflake writers
         if (count($restore->listConfigsInBackup('keboola.wr-db-snowflake'))
             || count($restore->listConfigsInBackup('keboola.wr-snowflake-blob-storage'))
+            || count($restore->listConfigsInBackup('keboola.wr-db-snowflake-gcs'))
+            || count($restore->listConfigsInBackup('keboola.wr-db-snowflake-gcs-s3'))
         ) {
             $this->logger->warning(
                 'Snowflake writers was not restored. You can transfer writers with Snowflake Writer Migrate App',

@@ -18,11 +18,11 @@ class ConfigDefinition extends BaseConfigDefinition
         $parametersNode
             ->validate()
                 ->always(function ($v) {
-                    if (!empty($v['abs']) && !empty($v['s3'])) {
-                        throw new InvalidConfigurationException('Both ABS and S3 cannot be set together.');
+                    if (!empty($v['abs']) && !empty($v['s3']) && !empty($v['gcs'])) {
+                        throw new InvalidConfigurationException('GCS, ABS and S3 cannot be set together.');
                     }
-                    if (empty($v['abs']) && empty($v['s3'])) {
-                        throw new InvalidConfigurationException('ABS or S3 must be configured.');
+                    if (empty($v['abs']) && empty($v['s3']) && empty($v['gcs'])) {
+                        throw new InvalidConfigurationException('GCS, ABS or S3 must be configured.');
                     }
                     return $v;
                 })
@@ -46,6 +46,20 @@ class ConfigDefinition extends BaseConfigDefinition
                         ->scalarNode('accessKeyId')->isRequired()->end()
                         ->scalarNode('#secretAccessKey')->isRequired()->end()
                         ->scalarNode('#sessionToken')->isRequired()->end()
+                    ->end()
+                ->end()
+                ->arrayNode('gcs')
+                    ->children()
+                        ->scalarNode('backupUri')->isRequired()->end()
+                        ->scalarNode('bucket')->isRequired()->end()
+                        ->scalarNode('projectId')->isRequired()->end()
+                        ->arrayNode('credentials')->isRequired()
+                            ->children()
+                                ->scalarNode('accessToken')->isRequired()->end()
+                                ->scalarNode('expiresIn')->isRequired()->end()
+                                ->scalarNode('tokenType')->isRequired()->end()
+                            ->end()
+                        ->end()
                     ->end()
                 ->end()
             ->end()
