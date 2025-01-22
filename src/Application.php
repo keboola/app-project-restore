@@ -70,8 +70,12 @@ class Application
             }
             $restore->restoreTables();
             $restore->restoreTableAliases();
-            $restore->restoreTriggers();
-            $restore->restoreNotifications();
+            if ($this->config->shouldRestoreTriggers()) {
+                $restore->restoreTriggers();
+            }
+            if ($this->config->shouldRestoreNotifications()) {
+                $restore->restoreNotifications();
+            }
             if ($this->config->shouldRestorePermanentFiles()) {
                 $restore->restorePermanentFiles();
             }
