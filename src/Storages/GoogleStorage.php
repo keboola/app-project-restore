@@ -43,7 +43,7 @@ class GoogleStorage implements IStorage
     private function initGcs(array $credentials, string $projectId): StorageClient
     {
         $fetchAuthToken = $this->getAuthTokenClass([
-            'access_token' => $credentials['accessToken'],
+            'access_token' => $credentials['#accessToken'],
             'expires_in' => $credentials['expiresIn'],
             'token_type' => $credentials['tokenType'],
         ]);

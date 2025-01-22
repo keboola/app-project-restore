@@ -207,7 +207,7 @@ class ConfigDefinitionTest extends TestCase
                             'bucket' => 'test-bucket',
                             'projectId' => 'test-project',
                             'credentials' => [
-                                'accessToken' => 'test-token',
+                                '#accessToken' => 'test-token',
                                 'expiresIn' => '1',
                                 'tokenType' => 'Bearer',
                             ],
