@@ -364,7 +364,7 @@ class FunctionalGcsTest extends TestCase
         $response = $sts->v1->token($request);
 
         return [
-            'accessToken' => $response['accessToken'],
+            '#accessToken' => $response['accessToken'],
             'expiresIn' => $response['expiresIn'],
             'tokenType' => $response['tokenType'],
         ];

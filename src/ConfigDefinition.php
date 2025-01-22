@@ -52,7 +52,7 @@ class ConfigDefinition extends BaseConfigDefinition
                         ->scalarNode('projectId')->isRequired()->end()
                         ->arrayNode('credentials')->isRequired()
                             ->children()
-                                ->scalarNode('accessToken')->isRequired()->end()
+                                ->scalarNode('#accessToken')->isRequired()->end()
                                 ->scalarNode('expiresIn')->isRequired()->end()
                                 ->scalarNode('tokenType')->isRequired()->end()
                             ->end()
