@@ -49,6 +49,8 @@ class ConfigDefinitionTest extends TestCase
                         'useDefaultBackend' => false,
                         'restoreConfigs' => true,
                         'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
                         'dryRun' => false,
                     ],
                 ],
@@ -72,6 +74,45 @@ class ConfigDefinitionTest extends TestCase
                         'restoreConfigs' => false,
                         'useDefaultBackend' => false,
                         'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
+                        'dryRun' => false,
+                    ],
+                ],
+            ],
+            'config gcs' => [
+                [
+                    'parameters' => [
+                        'gcs' => [
+                            'backupUri' => 'https://project-restore.storage.googleapis.com/some-path',
+                            'bucket' => 'test-bucket',
+                            'projectId' => 'test-project',
+                            'credentials' => [
+                                '#accessToken' => 'test-token',
+                                'expiresIn' => '1',
+                                'tokenType' => 'Bearer',
+                            ],
+                        ],
+                        'restoreConfigs' => false,
+                    ],
+                ],
+                [
+                    'parameters' => [
+                        'gcs' => [
+                            'backupUri' => 'https://project-restore.storage.googleapis.com/some-path',
+                            'bucket' => 'test-bucket',
+                            'projectId' => 'test-project',
+                            'credentials' => [
+                                '#accessToken' => 'test-token',
+                                'expiresIn' => '1',
+                                'tokenType' => 'Bearer',
+                            ],
+                        ],
+                        'restoreConfigs' => false,
+                        'useDefaultBackend' => false,
+                        'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
                         'dryRun' => false,
                     ],
                 ],

@@ -106,6 +106,20 @@ class Config extends BaseConfig
         return $value;
     }
 
+    public function shouldRestoreTriggers(): bool
+    {
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'restoreTriggers']);
+        return $value;
+    }
+
+    public function shouldRestoreNotifications(): bool
+    {
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'restoreNotifications']);
+        return $value;
+    }
+
     public function isDryRun(): bool
     {
         /** @var bool $value */

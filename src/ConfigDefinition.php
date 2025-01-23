@@ -30,6 +30,8 @@ class ConfigDefinition extends BaseConfigDefinition
                 ->end()
                 ->booleanNode('restoreConfigs')->defaultTrue()->end()
                 ->booleanNode('restorePermanentFiles')->defaultTrue()->end()
+                ->booleanNode('restoreTriggers')->defaultTrue()->end()
+                ->booleanNode('restoreNotifications')->defaultTrue()->end()
                 ->booleanNode('dryRun')->defaultFalse()->end()
                 ->arrayNode('abs')
                     ->children()

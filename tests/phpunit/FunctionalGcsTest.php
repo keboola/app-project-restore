@@ -115,7 +115,49 @@ class FunctionalGcsTest extends TestCase
         $this->assertStringContainsString('Downloading buckets', $output);
         $this->assertStringContainsString('Downloading tables', $output);
         $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringContainsString('Downloading triggers', $output);
+        $this->assertStringContainsString('Downloading notifications', $output);
         $this->assertStringNotContainsString('Downloading permanent files', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testRestoreTriggersDisabled(): void
+    {
+        $this->createConfigFile('configurations', false, true, false);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertStringContainsString('Downloading buckets', $output);
+        $this->assertStringContainsString('Downloading tables', $output);
+        $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringContainsString('Downloading permanent files', $output);
+        $this->assertStringContainsString('Downloading notifications', $output);
+        $this->assertStringNotContainsString('Downloading triggers', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testRestoreNotificationsDisabled(): void
+    {
+        $this->createConfigFile('configurations', false, true, true, false);
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertStringContainsString('Downloading buckets', $output);
+        $this->assertStringContainsString('Downloading tables', $output);
+        $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringContainsString('Downloading permanent files', $output);
+        $this->assertStringContainsString('Downloading triggers', $output);
+        $this->assertStringNotContainsString('Downloading notifications', $output);
 
         $this->assertEmpty($errorOutput);
     }
@@ -389,6 +431,8 @@ class FunctionalGcsTest extends TestCase
         string $directory,
         bool $restoreConfigs,
         bool $restorePermanentFiles = true,
+        bool $restoreTriggers = true,
+        bool $restoreNotifications = true,
     ): void {
         $configFile = new SplFileInfo($this->temp->getTmpFolder() . '/config.json');
         $jsonKey = (array) json_decode((string) getenv('TEST_GCP_SERVICE_ACCOUNT'), true);
@@ -406,6 +450,8 @@ class FunctionalGcsTest extends TestCase
                     ],
                     'restoreConfigs' => $restoreConfigs,
                     'restorePermanentFiles' => $restorePermanentFiles,
+                    'restoreTriggers' => $restoreTriggers,
+                    'restoreNotifications' => $restoreNotifications,
                 ],
             ]),
         );
