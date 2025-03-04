@@ -63,13 +63,19 @@ class Application
         }
 
         try {
-            $restore->restoreProjectMetadata();
-            $restore->restoreBuckets(!$params['useDefaultBackend']);
+            if ($this->config->shouldRestoreProjectMetadata()) {
+                $restore->restoreProjectMetadata();
+            }
+            if ($this->config->shouldRestoreBuckets()) {
+                $restore->restoreBuckets(!$params['useDefaultBackend']);
+            }
             if ($this->config->shouldRestoreConfigs()) {
                 $restore->restoreConfigs(self::COMPONENTS_WITH_CUSTOM_RESTORE);
             }
-            $restore->restoreTables();
-            $restore->restoreTableAliases();
+            if ($this->config->shouldRestoreBuckets() && $this->config->shouldRestoreTables()) {
+                $restore->restoreTables();
+                $restore->restoreTableAliases();
+            }
             if ($this->config->shouldRestoreTriggers()) {
                 $restore->restoreTriggers();
             }
