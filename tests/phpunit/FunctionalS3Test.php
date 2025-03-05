@@ -142,6 +142,61 @@ class FunctionalS3Test extends TestCase
         $this->assertEmpty($errorOutput);
     }
 
+    public function testRestoreBucketsDisabled(): void
+    {
+        $this->createConfigFile(
+            'configurations',
+            true,
+            true,
+            true,
+            true,
+            false,
+        );
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertStringNotContainsString('Downloading buckets', $output);
+        $this->assertStringNotContainsString('Downloading tables', $output);
+        $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringContainsString('Downloading permanent files', $output);
+        $this->assertStringContainsString('Downloading notifications', $output);
+        $this->assertStringContainsString('Downloading triggers', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
+    public function testRestoreTablesDisabled(): void
+    {
+        $this->createConfigFile(
+            'configurations',
+            true,
+            true,
+            true,
+            true,
+            true,
+            false,
+        );
+
+        $runProcess = $this->createTestProcess();
+        $runProcess->mustRun();
+
+        $output = $runProcess->getOutput();
+        $errorOutput = $runProcess->getErrorOutput();
+
+        $this->assertStringContainsString('Downloading buckets', $output);
+        $this->assertStringNotContainsString('Downloading tables', $output);
+        $this->assertStringContainsString('Downloading configurations', $output);
+        $this->assertStringContainsString('Downloading permanent files', $output);
+        $this->assertStringContainsString('Downloading notifications', $output);
+        $this->assertStringContainsString('Downloading triggers', $output);
+
+        $this->assertEmpty($errorOutput);
+    }
+
     public function testRestoreNotificationsDisabled(): void
     {
         $this->createConfigFile('configurations', false, true, true, false);
@@ -437,6 +492,8 @@ class FunctionalS3Test extends TestCase
         bool $restorePermanentFiles = true,
         bool $restoreTriggers = true,
         bool $restoreNotifications = true,
+        bool $restoreBuckets = true,
+        bool $restoreTables = true,
     ): SplFileInfo {
         $configFile = new SplFileInfo($this->temp->getTmpFolder() . '/config.json');
 
@@ -460,6 +517,8 @@ class FunctionalS3Test extends TestCase
                     'restorePermanentFiles' => $restorePermanentFiles,
                     'restoreTriggers' => $restoreTriggers,
                     'restoreNotifications' => $restoreNotifications,
+                    'restoreBuckets' => $restoreBuckets,
+                    'restoreTables' => $restoreTables,
                 ],
             ]),
         );

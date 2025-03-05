@@ -120,6 +120,27 @@ class Config extends BaseConfig
         return $value;
     }
 
+    public function shouldRestoreBuckets(): bool
+    {
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'restoreBuckets']);
+        return $value;
+    }
+
+    public function shouldRestoreTables(): bool
+    {
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'restoreTables']);
+        return $value;
+    }
+
+    public function shouldRestoreProjectMetadata(): bool
+    {
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'restoreProjectMetadata']);
+        return $value;
+    }
+
     public function isDryRun(): bool
     {
         /** @var bool $value */
