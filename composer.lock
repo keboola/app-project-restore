@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab3a9edfab4f98b2a4cafec806336305",
+    "content-hash": "784e9d1893656d6d5d118257799925ab",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1329,16 +1329,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.20.0",
+            "version": "2.21.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "8851631824d706691fb4537875d1f8c22c7d5939"
+                "reference": "d982649b8df75e0c767986f257f843ccf292e52b"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/8851631824d706691fb4537875d1f8c22c7d5939",
-                "reference": "8851631824d706691fb4537875d1f8c22c7d5939",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/d982649b8df75e0c767986f257f843ccf292e52b",
+                "reference": "d982649b8df75e0c767986f257f843ccf292e52b",
                 "shasum": ""
             },
             "require": {
@@ -1376,9 +1376,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.20.0"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.21.0"
             },
-            "time": "2025-03-04T07:36:08+00:00"
+            "time": "2025-03-05T14:25:10+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6355,12 +6355,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
