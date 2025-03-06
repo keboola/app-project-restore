@@ -170,7 +170,7 @@ class Application
             }
         }
 
-        if (count($components->listComponents())) {
+        if (count($componentsConfigurations)) {
             throw new UserException('Project is not empty. Delete all existing component configurations.');
         }
     }
