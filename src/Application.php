@@ -31,6 +31,12 @@ class Application
         'keboola.wr-db-snowflake-gcs-s3',
     ];
 
+    private const IGNORED_CHECK_COMPONENTS = [
+        'keboola.app-project-migrate-large-tables',
+        'keboola.app-project-migrate',
+        'keboola.orchestrator',
+    ];
+
     public function __construct(Config $config, LoggerInterface $logger)
     {
         $this->config = $config;
@@ -145,8 +151,11 @@ class Application
 
         $components = new Components($storageApi);
         $componentsConfigurations = $components->listComponents();
-        if (!count($componentsConfigurations)) {
-            return;
+
+        foreach ($componentsConfigurations ?? [] as $k => $component) {
+            if (in_array($component['id'], self::IGNORED_CHECK_COMPONENTS)) {
+                unset($componentsConfigurations[$k]);
+            }
         }
 
         // ignore self configuration
@@ -161,7 +170,7 @@ class Application
             }
         }
 
-        if (count($components->listComponents())) {
+        if (count($componentsConfigurations)) {
             throw new UserException('Project is not empty. Delete all existing component configurations.');
         }
     }
