@@ -58,7 +58,9 @@ class Application
     public function run(): void
     {
         $storageApi = $this->initSapi();
-        $this->validateProject($storageApi);
+        if ($this->config->checkEmptyProject()) {
+            $this->validateProject($storageApi);
+        }
 
         $params = $this->config->getParameters();
 
