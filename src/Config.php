@@ -147,4 +147,11 @@ class Config extends BaseConfig
         $value = $this->getValue(['parameters', 'dryRun']);
         return $value;
     }
+
+    public function checkEmptyProject(): bool
+    {
+        /** @var bool $value */
+        $value = $this->getValue(['parameters', 'checkEmptyProject']);
+        return $value;
+    }
 }
