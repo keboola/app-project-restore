@@ -5,7 +5,7 @@
     "require": {
         "php": "^8.2",
         "google/apiclient": "^2.18",
-        "keboola/kbc-project-restore": "dev-ondra-disable-orchestration",
+        "keboola/kbc-project-restore": "^2.21",
         "keboola/php-component": "^10.1",
         "keboola/php-file-storage-utils": "^0.2.6",
         "microsoft/azure-storage-blob": "^1.5"
