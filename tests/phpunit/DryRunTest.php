@@ -75,7 +75,11 @@ class DryRunTest extends TestCase
 
         $this->assertStringContainsString('[dry-run] Restore project metadata', $output);
         $this->assertMatchesRegularExpression(
-            '/\[dry-run\] Restore configuration [0-9]+ \(component "keboola.csv-import"\)/',
+            '/\[dry-run\] Create configuration [0-9]+ \(component "keboola.csv-import"\)/',
+            $output,
+        );
+        $this->assertMatchesRegularExpression(
+            '/\[dry-run\] Update configuration [0-9]+ \(component "keboola.csv-import"\)/',
             $output,
         );
         $this->assertMatchesRegularExpression(
