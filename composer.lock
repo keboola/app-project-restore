@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "8680ca4b589cdb9376b957fa8d5b72ad",
+    "content-hash": "cdb5ab3fc47e22e6609ddcc326054640",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1329,16 +1329,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "dev-fix-dry-run-configuration-creation",
+            "version": "2.22.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "e023b03bcc6d784c19a517650a05575553076ca1"
+                "reference": "001edda3fa592e22af04cd64c16e12327f62d4e3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/e023b03bcc6d784c19a517650a05575553076ca1",
-                "reference": "e023b03bcc6d784c19a517650a05575553076ca1",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/001edda3fa592e22af04cd64c16e12327f62d4e3",
+                "reference": "001edda3fa592e22af04cd64c16e12327f62d4e3",
                 "shasum": ""
             },
             "require": {
@@ -1376,9 +1376,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/fix-dry-run-configuration-creation"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.22.0"
             },
-            "time": "2025-03-23T21:38:51+00:00"
+            "time": "2025-03-24T09:27:17+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6355,9 +6355,7 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {
-        "keboola/kbc-project-restore": 20
-    },
+    "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
