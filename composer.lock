@@ -1329,16 +1329,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.25.0",
+            "version": "2.26.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "c3b0890b940ba490614c2ae1d70d69952367216d"
+                "reference": "1a2e7e4fca63ae10852926dbd58ce99bc92bbebe"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/c3b0890b940ba490614c2ae1d70d69952367216d",
-                "reference": "c3b0890b940ba490614c2ae1d70d69952367216d",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/1a2e7e4fca63ae10852926dbd58ce99bc92bbebe",
+                "reference": "1a2e7e4fca63ae10852926dbd58ce99bc92bbebe",
                 "shasum": ""
             },
             "require": {
@@ -1376,9 +1376,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.25.0"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.26.0"
             },
-            "time": "2025-04-17T06:48:17+00:00"
+            "time": "2025-04-17T11:05:39+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6355,12 +6355,12 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": [],
+    "stability-flags": {},
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": [],
+    "platform-dev": {},
     "plugin-api-version": "2.6.0"
 }
