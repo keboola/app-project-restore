@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32eff632f2595f6e68c37d7a1d74be34",
+    "content-hash": "86874ff60a79e7e6f8ac58d8d4d4c834",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1329,16 +1329,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.26.0",
+            "version": "dev-AJDA-1215-ondra",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "1a2e7e4fca63ae10852926dbd58ce99bc92bbebe"
+                "reference": "4a1e5f8623e89256335681c8c34cd9f7c1ef7ce8"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/1a2e7e4fca63ae10852926dbd58ce99bc92bbebe",
-                "reference": "1a2e7e4fca63ae10852926dbd58ce99bc92bbebe",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/4a1e5f8623e89256335681c8c34cd9f7c1ef7ce8",
+                "reference": "4a1e5f8623e89256335681c8c34cd9f7c1ef7ce8",
                 "shasum": ""
             },
             "require": {
@@ -1376,9 +1376,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.26.0"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/AJDA-1215-ondra"
             },
-            "time": "2025-04-17T11:05:39+00:00"
+            "time": "2025-10-24T19:53:35+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6355,12 +6355,14 @@
     ],
     "aliases": [],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "keboola/kbc-project-restore": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
-    "platform-dev": {},
+    "platform-dev": [],
     "plugin-api-version": "2.6.0"
 }
