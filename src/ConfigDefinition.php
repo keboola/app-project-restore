@@ -35,6 +35,8 @@ class ConfigDefinition extends BaseConfigDefinition
                 ->booleanNode('restoreBuckets')->defaultTrue()->end()
                 ->booleanNode('restoreTables')->defaultTrue()->end()
                 ->booleanNode('restoreProjectMetadata')->defaultTrue()->end()
+                ->arrayNode('tablesToMigrate')->prototype('scalar')->end()->end()
+                ->arrayNode('configurationsToMigrate')->prototype('scalar')->end()->end()
                 ->booleanNode('dryRun')->defaultFalse()->end()
                 ->booleanNode('checkEmptyProject')->defaultTrue()->end()
                 ->arrayNode('abs')

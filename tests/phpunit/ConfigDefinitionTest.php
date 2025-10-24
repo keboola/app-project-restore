@@ -54,6 +54,8 @@ class ConfigDefinitionTest extends TestCase
                         'restoreBuckets' => true,
                         'restoreTables' => true,
                         'restoreProjectMetadata' => true,
+                        'tablesToMigrate' => [],
+                        'configurationsToMigrate' => [],
                         'dryRun' => false,
                         'checkEmptyProject' => true,
                     ],
@@ -83,6 +85,8 @@ class ConfigDefinitionTest extends TestCase
                         'restoreBuckets' => true,
                         'restoreTables' => true,
                         'restoreProjectMetadata' => true,
+                        'tablesToMigrate' => [],
+                        'configurationsToMigrate' => [],
                         'dryRun' => false,
                         'checkEmptyProject' => true,
                     ],
@@ -118,6 +122,118 @@ class ConfigDefinitionTest extends TestCase
                         ],
                         'restoreConfigs' => false,
                         'useDefaultBackend' => false,
+                        'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
+                        'restoreBuckets' => true,
+                        'restoreTables' => true,
+                        'restoreProjectMetadata' => true,
+                        'tablesToMigrate' => [],
+                        'configurationsToMigrate' => [],
+                        'dryRun' => false,
+                        'checkEmptyProject' => true,
+                    ],
+                ],
+            ],
+            'config s3 with tablesToMigrate' => [
+                [
+                    'parameters' => [
+                        's3' => [
+                            'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'tablesToMigrate' => ['table1', 'table2', 'table3'],
+                    ],
+                ],
+                [
+                    'parameters' => [
+                        's3' => [
+                            'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'tablesToMigrate' => ['table1', 'table2', 'table3'],
+                        'useDefaultBackend' => false,
+                        'restoreConfigs' => true,
+                        'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
+                        'restoreBuckets' => true,
+                        'restoreTables' => true,
+                        'restoreProjectMetadata' => true,
+                        'configurationsToMigrate' => [],
+                        'dryRun' => false,
+                        'checkEmptyProject' => true,
+                    ],
+                ],
+            ],
+            'config abs with configurationsToMigrate' => [
+                [
+                    'parameters' => [
+                        'abs' => [
+                            'container' => 'test-container',
+                            '#connectionString' => 'secret',
+                        ],
+                        'configurationsToMigrate' => ['config1', 'config2'],
+                    ],
+                ],
+                [
+                    'parameters' => [
+                        'abs' => [
+                            'container' => 'test-container',
+                            '#connectionString' => 'secret',
+                        ],
+                        'configurationsToMigrate' => ['config1', 'config2'],
+                        'useDefaultBackend' => false,
+                        'restoreConfigs' => true,
+                        'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
+                        'restoreBuckets' => true,
+                        'restoreTables' => true,
+                        'restoreProjectMetadata' => true,
+                        'tablesToMigrate' => [],
+                        'dryRun' => false,
+                        'checkEmptyProject' => true,
+                    ],
+                ],
+            ],
+            'config gcs with both migration arrays' => [
+                [
+                    'parameters' => [
+                        'gcs' => [
+                            'backupUri' => 'https://project-restore.storage.googleapis.com/some-path',
+                            'bucket' => 'test-bucket',
+                            'projectId' => 'test-project',
+                            'credentials' => [
+                                '#accessToken' => 'test-token',
+                                'expiresIn' => '1',
+                                'tokenType' => 'Bearer',
+                            ],
+                        ],
+                        'tablesToMigrate' => ['table1'],
+                        'configurationsToMigrate' => ['config1', 'config2', 'config3'],
+                    ],
+                ],
+                [
+                    'parameters' => [
+                        'gcs' => [
+                            'backupUri' => 'https://project-restore.storage.googleapis.com/some-path',
+                            'bucket' => 'test-bucket',
+                            'projectId' => 'test-project',
+                            'credentials' => [
+                                '#accessToken' => 'test-token',
+                                'expiresIn' => '1',
+                                'tokenType' => 'Bearer',
+                            ],
+                        ],
+                        'tablesToMigrate' => ['table1'],
+                        'configurationsToMigrate' => ['config1', 'config2', 'config3'],
+                        'useDefaultBackend' => false,
+                        'restoreConfigs' => true,
                         'restorePermanentFiles' => true,
                         'restoreTriggers' => true,
                         'restoreNotifications' => true,
@@ -269,6 +385,36 @@ class ConfigDefinitionTest extends TestCase
                 ],
                 InvalidConfigurationException::class,
                 'Only one of ABS, S3, or GCS needs to be configured.',
+            ],
+            'invalid tablesToMigrate type' => [
+                [
+                    'parameters' => [
+                        's3' => [
+                            'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'tablesToMigrate' => 'not-an-array',
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'Invalid type for path "root.parameters.tablesToMigrate". Expected "array", but got "string"',
+            ],
+            'invalid configurationsToMigrate type' => [
+                [
+                    'parameters' => [
+                        's3' => [
+                            'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'configurationsToMigrate' => 'not-an-array',
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'Invalid type for path "root.parameters.configurationsToMigrate". Expected "array", but got "string"',
             ],
         ];
     }

@@ -78,11 +78,14 @@ class Application
                 $restore->restoreBuckets(!$params['useDefaultBackend']);
             }
             if ($this->config->shouldRestoreConfigs()) {
-                $restore->restoreConfigs(self::COMPONENTS_WITH_CUSTOM_RESTORE);
+                $restore->restoreConfigs(
+                    self::COMPONENTS_WITH_CUSTOM_RESTORE,
+                    $this->config->getConfigurationsToMigrate(),
+                );
             }
             if ($this->config->shouldRestoreBuckets() && $this->config->shouldRestoreTables()) {
-                $restore->restoreTables();
-                $restore->restoreTableAliases();
+                $restore->restoreTables($this->config->getTablesToMigrate());
+                $restore->restoreTableAliases($this->config->getTablesToMigrate());
             }
             if ($this->config->shouldRestoreTriggers()) {
                 $restore->restoreTriggers();
