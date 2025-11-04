@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "32eff632f2595f6e68c37d7a1d74be34",
+    "content-hash": "5e2c0726381a15b70a268760bdad3d4c",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1329,16 +1329,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.27.0",
+            "version": "2.28.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "515efe7bcb29b317a64a9286ad2d3e80f158f843"
+                "reference": "be512ae8225c9e9b17bbe08ba0369a66818f554d"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/515efe7bcb29b317a64a9286ad2d3e80f158f843",
-                "reference": "515efe7bcb29b317a64a9286ad2d3e80f158f843",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/be512ae8225c9e9b17bbe08ba0369a66818f554d",
+                "reference": "be512ae8225c9e9b17bbe08ba0369a66818f554d",
                 "shasum": ""
             },
             "require": {
@@ -1376,9 +1376,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.27.0"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.28.0"
             },
-            "time": "2025-10-30T06:56:26+00:00"
+            "time": "2025-11-03T22:29:15+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
