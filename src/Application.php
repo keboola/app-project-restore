@@ -75,7 +75,10 @@ class Application
                 $restore->restoreProjectMetadata();
             }
             if ($this->config->shouldRestoreBuckets()) {
-                $restore->restoreBuckets(!$params['useDefaultBackend']);
+                $restore->restoreBuckets(
+                    !$params['useDefaultBackend'],
+                    $this->config->getTablesToMigrate(),
+                );
             }
             if ($this->config->shouldRestoreConfigs()) {
                 $restore->restoreConfigs(
