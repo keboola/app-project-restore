@@ -68,6 +68,9 @@
         "patches": {
             "microsoft/azure-storage-common": [
                 "patches/microsoft-azure-storage-common-src-common-internal-servicerestproxy-php.patch"
+            ],
+            "keboola/kbc-project-restore": [
+                "patches/keboola-kbc-project-restore-trigger-non-fatal.patch"
             ]
         }
     }
