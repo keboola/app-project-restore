@@ -1333,12 +1333,12 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "1ca73237306411c6fdadbd8efeca465fd45bc590"
+                "reference": "24ad89c317272d2cbde0f1fd410807df247a61b3"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/1ca73237306411c6fdadbd8efeca465fd45bc590",
-                "reference": "1ca73237306411c6fdadbd8efeca465fd45bc590",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/24ad89c317272d2cbde0f1fd410807df247a61b3",
+                "reference": "24ad89c317272d2cbde0f1fd410807df247a61b3",
                 "shasum": ""
             },
             "require": {
@@ -1379,7 +1379,7 @@
             "support": {
                 "source": "https://github.com/keboola/php-kbc-project-restore/tree/ondra/AJDA-2414"
             },
-            "time": "2026-03-18T11:55:28+00:00"
+            "time": "2026-03-18T13:41:11+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
