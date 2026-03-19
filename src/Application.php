@@ -70,6 +70,8 @@ class Application
             $restore->setDryRunMode();
         }
 
+        $restore->setForcePrimaryKeyNotNull($this->config->shouldForcePrimaryKeyNotNull());
+
         try {
             if ($this->config->shouldRestoreProjectMetadata()) {
                 $restore->restoreProjectMetadata();
@@ -81,7 +83,7 @@ class Application
                 $restore->restoreConfigs(self::COMPONENTS_WITH_CUSTOM_RESTORE);
             }
             if ($this->config->shouldRestoreBuckets() && $this->config->shouldRestoreTables()) {
-                $restore->restoreTables();
+                $restore->restoreTables($this->config->getTableParallelism());
                 $restore->restoreTableAliases();
             }
             if ($this->config->shouldRestoreTriggers()) {
