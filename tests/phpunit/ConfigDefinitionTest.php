@@ -144,7 +144,7 @@ class ConfigDefinitionTest extends TestCase
                             '#secretAccessKey' => 'secret',
                             '#sessionToken' => 'token',
                         ],
-                        'tableParallelism' => 10,
+                        'tableParallelism' => 20,
                     ],
                 ],
                 [
@@ -155,7 +155,7 @@ class ConfigDefinitionTest extends TestCase
                             '#secretAccessKey' => 'secret',
                             '#sessionToken' => 'token',
                         ],
-                        'tableParallelism' => 10,
+                        'tableParallelism' => 20,
                         'useDefaultBackend' => false,
                         'restoreConfigs' => true,
                         'restorePermanentFiles' => true,

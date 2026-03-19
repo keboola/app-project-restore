@@ -70,7 +70,7 @@ class Application
             $restore->setDryRunMode();
         }
 
-        $restore->setForcePrimaryKeyNotNull($this->config->forcePrimaryKeyNotNull());
+        $restore->setForcePrimaryKeyNotNull($this->config->shouldForcePrimaryKeyNotNull());
 
         try {
             if ($this->config->shouldRestoreProjectMetadata()) {

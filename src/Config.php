@@ -141,7 +141,7 @@ class Config extends BaseConfig
         return $value;
     }
 
-    public function forcePrimaryKeyNotNull(): bool
+    public function shouldForcePrimaryKeyNotNull(): bool
     {
         /** @var bool $value */
         $value = $this->getValue(['parameters', 'forcePrimaryKeyNotNull']);
