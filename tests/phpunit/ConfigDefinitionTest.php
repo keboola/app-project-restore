@@ -55,6 +55,7 @@ class ConfigDefinitionTest extends TestCase
                         'restoreTables' => true,
                         'restoreProjectMetadata' => true,
                         'dryRun' => false,
+                        'tableParallelism' => 10,
                         'checkEmptyProject' => true,
                     ],
                 ],
@@ -84,6 +85,7 @@ class ConfigDefinitionTest extends TestCase
                         'restoreTables' => true,
                         'restoreProjectMetadata' => true,
                         'dryRun' => false,
+                        'tableParallelism' => 10,
                         'checkEmptyProject' => true,
                     ],
                 ],
@@ -118,6 +120,41 @@ class ConfigDefinitionTest extends TestCase
                         ],
                         'restoreConfigs' => false,
                         'useDefaultBackend' => false,
+                        'restorePermanentFiles' => true,
+                        'restoreTriggers' => true,
+                        'restoreNotifications' => true,
+                        'restoreBuckets' => true,
+                        'restoreTables' => true,
+                        'restoreProjectMetadata' => true,
+                        'dryRun' => false,
+                        'tableParallelism' => 10,
+                        'checkEmptyProject' => true,
+                    ],
+                ],
+            ],
+            'config s3 with custom tableParallelism' => [
+                [
+                    'parameters' => [
+                        's3' => [
+                            'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'tableParallelism' => 10,
+                    ],
+                ],
+                [
+                    'parameters' => [
+                        's3' => [
+                            'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'tableParallelism' => 10,
+                        'useDefaultBackend' => false,
+                        'restoreConfigs' => true,
                         'restorePermanentFiles' => true,
                         'restoreTriggers' => true,
                         'restoreNotifications' => true,
@@ -241,6 +278,22 @@ class ConfigDefinitionTest extends TestCase
                 ],
                 InvalidConfigurationException::class,
                 'The child config "#connectionString" under "root.parameters.abs" must be configured.',
+            ],
+            'tableParallelism zero' => [
+                [
+                    'parameters' => [
+                        's3' => [
+                            'backupUri' => 'https://project-restore.s3.eu-central-1.amazonaws.com/some-path',
+                            'accessKeyId' => 'test-user',
+                            '#secretAccessKey' => 'secret',
+                            '#sessionToken' => 'token',
+                        ],
+                        'tableParallelism' => 0,
+                    ],
+                ],
+                InvalidConfigurationException::class,
+                'The value 0 is too small for path "root.parameters.tableParallelism".'
+                . ' Should be greater than or equal to 1',
             ],
             'setup all storages' => [
                 [

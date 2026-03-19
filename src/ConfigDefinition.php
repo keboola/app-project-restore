@@ -36,6 +36,7 @@ class ConfigDefinition extends BaseConfigDefinition
                 ->booleanNode('restoreTables')->defaultTrue()->end()
                 ->booleanNode('restoreProjectMetadata')->defaultTrue()->end()
                 ->booleanNode('dryRun')->defaultFalse()->end()
+                ->integerNode('tableParallelism')->defaultValue(10)->min(1)->end()
                 ->booleanNode('checkEmptyProject')->defaultTrue()->end()
                 ->arrayNode('abs')
                     ->children()

@@ -141,6 +141,13 @@ class Config extends BaseConfig
         return $value;
     }
 
+    public function getTableParallelism(): int
+    {
+        /** @var int $value */
+        $value = $this->getValue(['parameters', 'tableParallelism']);
+        return $value;
+    }
+
     public function isDryRun(): bool
     {
         /** @var bool $value */
