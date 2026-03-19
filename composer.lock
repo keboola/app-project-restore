@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "5e2c0726381a15b70a268760bdad3d4c",
+    "content-hash": "04f564e2e4bb86423668e99a3ee51a3d",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1329,16 +1329,16 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.28.1",
+            "version": "2.30.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "bc1018cb4917d736bf9733e2fe47b4a8455fee06"
+                "reference": "6c949235a104459d08bea148397d6975a8792b7a"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/bc1018cb4917d736bf9733e2fe47b4a8455fee06",
-                "reference": "bc1018cb4917d736bf9733e2fe47b4a8455fee06",
+                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/6c949235a104459d08bea148397d6975a8792b7a",
+                "reference": "6c949235a104459d08bea148397d6975a8792b7a",
                 "shasum": ""
             },
             "require": {
@@ -1346,7 +1346,8 @@
                 "keboola/php-temp": "^2.0",
                 "keboola/storage-api-client": "^15.2",
                 "monolog/monolog": "^2.3",
-                "php": "^8.2"
+                "php": "^8.2",
+                "symfony/process": "^6.0"
             },
             "require-dev": {
                 "cweagans/composer-patches": "^1.7",
@@ -1376,9 +1377,9 @@
             ],
             "description": "Restore KBC project",
             "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.28.1"
+                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.30.0"
             },
-            "time": "2025-11-04T14:44:21+00:00"
+            "time": "2026-03-19T14:42:06+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6362,5 +6363,5 @@
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.6.0"
+    "plugin-api-version": "2.9.0"
 }
