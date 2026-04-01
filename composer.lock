@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "04f564e2e4bb86423668e99a3ee51a3d",
+    "content-hash": "123be3b537c44daf55aa64a8f890ed1b",
     "packages": [
         {
             "name": "aws/aws-crt-php",
@@ -1329,17 +1329,11 @@
         },
         {
             "name": "keboola/kbc-project-restore",
-            "version": "2.30.0",
+            "version": "dev-devin/1775080330-continue-on-table-failure",
             "source": {
                 "type": "git",
-                "url": "https://github.com/keboola/php-kbc-project-restore.git",
-                "reference": "6c949235a104459d08bea148397d6975a8792b7a"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/keboola/php-kbc-project-restore/zipball/6c949235a104459d08bea148397d6975a8792b7a",
-                "reference": "6c949235a104459d08bea148397d6975a8792b7a",
-                "shasum": ""
+                "url": "https://github.com/keboola/php-kbc-project-restore",
+                "reference": "9e59efb1415729d9500856c9dec860bdcbd382bc"
             },
             "require": {
                 "keboola/notification-api-php-client": "^3.0",
@@ -1371,15 +1365,68 @@
                     "Keboola\\ProjectRestore\\": "src/"
                 }
             },
-            "notification-url": "https://packagist.org/downloads/",
+            "autoload-dev": {
+                "psr-4": {
+                    "Keboola\\ProjectRestore\\Tests\\": "tests/"
+                }
+            },
+            "scripts": {
+                "tests-phpunit": [
+                    "phpunit"
+                ],
+                "phplint": [
+                    "parallel-lint -j 10 --exclude vendor ."
+                ],
+                "phpcs": [
+                    "phpcs -n --ignore=vendor --extensions=php ."
+                ],
+                "phpcbf": [
+                    "phpcbf -n --ignore=vendor --extensions=php ."
+                ],
+                "phpstan": [
+                    "phpstan analyse ./src ./tests --level=max --no-progress -c phpstan.neon"
+                ],
+                "prepare-test-data": [
+                    "php ./tests/loadToAbs.php",
+                    "php ./tests/loadToS3.php",
+                    "php ./tests/loadToGcs.php"
+                ],
+                "tests-abs": [
+                    "phpunit tests/AbsRestoreTest.php"
+                ],
+                "tests-s3": [
+                    "phpunit ./tests/S3RestoreTest.php"
+                ],
+                "tests-gcs": [
+                    "phpunit ./tests/GcsRestoreTest.php"
+                ],
+                "tests-cross-backends": [
+                    "phpunit ./tests/CrossBackendRestoreTest.php"
+                ],
+                "tests": [
+                    "@tests-abs",
+                    "@tests-s3"
+                ],
+                "build": [
+                    "@phplint",
+                    "@phpcs",
+                    "@phpstan"
+                ],
+                "ci": [
+                    "@composer validate --no-check-publish --no-check-all",
+                    "@build",
+                    "@tests"
+                ],
+                "ci-except-tests": [
+                    "@composer validate --no-check-publish --no-check-all",
+                    "@build"
+                ]
+            },
             "license": [
                 "MIT"
             ],
             "description": "Restore KBC project",
-            "support": {
-                "source": "https://github.com/keboola/php-kbc-project-restore/tree/2.30.0"
-            },
-            "time": "2026-03-19T14:42:06+00:00"
+            "time": "2026-04-01T21:53:32+00:00"
         },
         {
             "name": "keboola/notification-api-php-client",
@@ -6354,14 +6401,23 @@
             "time": "2024-03-03T12:36:25+00:00"
         }
     ],
-    "aliases": [],
+    "aliases": [
+        {
+            "package": "keboola/kbc-project-restore",
+            "version": "dev-devin/1775080330-continue-on-table-failure",
+            "alias": "2.30.99",
+            "alias_normalized": "2.30.99.0"
+        }
+    ],
     "minimum-stability": "stable",
-    "stability-flags": {},
+    "stability-flags": {
+        "keboola/kbc-project-restore": 20
+    },
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
         "php": "^8.2"
     },
     "platform-dev": {},
-    "plugin-api-version": "2.9.0"
+    "plugin-api-version": "2.6.0"
 }
