@@ -1333,7 +1333,7 @@
             "source": {
                 "type": "git",
                 "url": "https://github.com/keboola/php-kbc-project-restore",
-                "reference": "9e59efb1415729d9500856c9dec860bdcbd382bc"
+                "reference": "072c26294ecd0477db3d1fb307f94c5ec8fa1e8f"
             },
             "require": {
                 "keboola/notification-api-php-client": "^3.0",
