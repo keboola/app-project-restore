@@ -58,7 +58,7 @@ Before running tests, verify that these variables are present in `.env` (or expo
 
 ## Development commands
 
-Service name in `docker-compose.yml` is `dev`. The `composer tests` script runs `tests-prepare-s3` + `tests-prepare-abs` + `tests-prepare-gcs` + `tests-phpunit` in sequence.
+Service name in `docker-compose.yml` is `dev`. The `composer tests` script runs `tests-prepare-abs` + `tests-prepare-s3` + `tests-prepare-gcs` + `tests-phpunit` in sequence.
 
 ```bash
 docker compose run --rm dev composer phpcs
